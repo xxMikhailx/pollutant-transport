@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<footer class="page-footer" th:fragment="footer">
+    <div class="container">
+        <div class="row footer-main-information">
+            <div class="col-md-4 col-lg-4 col-xl-4 col-sm-12 col-12">
+                <h5 class="text-white" th:text="#{footer.working.time}"></h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <span class="text-white" th:text="#{footer.working.time.monday} + ' - ' + #{footer.working.time.friday} + ': 9.00-18.00'"></span>
+                    </li>
+                    <li>
+                        <span class="text-white" th:text="#{footer.working.time.saturday} + ': 10.00-14.00'"></span>
+                    </li>
+                    <li>
+                        <span class="text-white" th:text="#{footer.working.time.sunday} + ': ' + #{footer.working.time.closed.only.booked}"></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 col-lg-4 col-xl-4 col-sm-12 col-12">
+                <h5 class="text-white" th:text="#{footer.contacts}"></h5>
+                <ul class="list-unstyled">
+                    <li class="text-white">
+                        <i class="far fa-envelope fa-1x"></i> <a class="text-white" href="mailto:din.bilmaklare@hotmail.com"
+                                                                 th:text="#{login.text.email}"></a>
+                    </li>
+                    <li class="text-white">
+                        <i class="fas fa-phone-square fa-1x"></i> <a class="text-white" href="tel:+46793322412"
+                                                                     th:text="#{contact.phone}"></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 col-lg-4 col-xl-4 col-sm-12 col-12">
+                <h5 class="text-white" th:text="#{footer.address}"></h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <span class="text-white">Söderbymalmsvägen</span>
+                    </li>
+                    <li>
+                        <span class="text-white">136 45 Handen</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+            <th:block th:text="#{footer.copyright}"/>
+            &copy;
+            <a th:href="@{/}"> DIN BILMÄKLARE</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+
+</html>
