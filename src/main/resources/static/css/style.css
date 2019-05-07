@@ -1,3 +1,30 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
 .main-container {
 	padding: 0;
+	flex: 1;
+}
+
+footer {
+    background-color: #55585B;
+    padding-top: 20px;
+    color: #fff;
+}
+
+.footer-copyright {
+    min-height: 40px;
+    text-align: center;
+}
+
+.footer-copyright div {
+    color: #f5f5f5 !important;
+}
+
+.footer-copyright a {
+    color: #bcaaa4 !important;
+    text-decoration: none;
 }
