@@ -11,30 +11,31 @@
             <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container">
                 <form method="POST">
                     <div class="form-group">
-                        <label for="windSpeed">Wind speed</label>
+                        <label for="windSpeed" th:text="#{attribute.wind.speed}"></label>
                         <input type="text" class="form-control" id="windSpeed"
-                               placeholder="Enter wind speed">
+                               th:placeholder="#{attribute.wind.speed.tooltip}">
                     </div>
                     <div class="form-group">
-                        <label for="waterFlow">Water flow</label>
+                        <label for="waterFlow" th:text="#{attribute.water.flow}"></label>
                         <input type="text" class="form-control" id="waterFlow"
-                               placeholder="Enter water flow">
+                               th:placeholder="#{attribute.water.flow.tooltip}">
                     </div>
                     <div class="form-group">
-                        <label for="riverSpeed">River speed</label>
+                        <label for="riverSpeed" th:text="#{attribute.river.speed}"></label>
                         <input type="text" class="form-control" id="riverSpeed"
-                               placeholder="Enter river speed">
+                               th:placeholder="#{attribute.river.speed.tooltip}">
                     </div>
                     <div class="form-group">
-                        <label for="radius">Radius</label>
-                        <input type="text" class="form-control" id="radius" placeholder="Enter radius">
+                        <label for="radius" th:text="#{attribute.radius}"></label>
+                        <input type="text" class="form-control" id="radius"
+                               th:placeholder="#{attribute.radius.tooltip}">
                     </div>
                     <div class="form-group">
-                        <label for="time">Time</label>
-                        <input type="text" class="form-control" id="time" placeholder="Enter time">
+                        <label for="time" th:text="#{attribute.time}"></label>
+                        <input type="text" class="form-control" id="time" th:placeholder="#{attribute.time.tooltip}">
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Simulate</button>
+                        <button type="submit" class="btn btn-primary" th:text="#{simulation.button.text}"></button>
                     </div>
                 </form>
             </div>
