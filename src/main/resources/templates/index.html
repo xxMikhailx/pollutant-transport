@@ -5,43 +5,41 @@
 <body>
 <div th:replace="~{fragment/nav :: nav}"></div>
 
-<main class="container-fluid main-container">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container">
-                <form method="POST">
-                    <div class="form-group">
-                        <label for="windSpeed" th:text="#{attribute.wind.speed}"></label>
-                        <input type="text" class="form-control" id="windSpeed"
-                               th:placeholder="#{attribute.wind.speed.tooltip}">
-                    </div>
-                    <div class="form-group">
-                        <label for="waterFlow" th:text="#{attribute.water.flow}"></label>
-                        <input type="text" class="form-control" id="waterFlow"
-                               th:placeholder="#{attribute.water.flow.tooltip}">
-                    </div>
-                    <div class="form-group">
-                        <label for="riverSpeed" th:text="#{attribute.river.speed}"></label>
-                        <input type="text" class="form-control" id="riverSpeed"
-                               th:placeholder="#{attribute.river.speed.tooltip}">
-                    </div>
-                    <div class="form-group">
-                        <label for="radius" th:text="#{attribute.radius}"></label>
-                        <input type="text" class="form-control" id="radius"
-                               th:placeholder="#{attribute.radius.tooltip}">
-                    </div>
-                    <div class="form-group">
-                        <label for="time" th:text="#{attribute.time}"></label>
-                        <input type="text" class="form-control" id="time" th:placeholder="#{attribute.time.tooltip}">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary" th:text="#{simulation.button.text}"></button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9 map-container mb-3">
-                <img src="https://place-hold.it/1800x1200" class="img-fluid" alt="Map"/>
-            </div>
+<main class="container">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="windSpeed" th:text="#{attribute.wind.speed}"></label>
+                    <input type="text" class="form-control" id="windSpeed"
+                           th:placeholder="#{attribute.wind.speed.tooltip}">
+                </div>
+                <div class="form-group">
+                    <label for="waterFlow" th:text="#{attribute.water.flow}"></label>
+                    <input type="text" class="form-control" id="waterFlow"
+                           th:placeholder="#{attribute.water.flow.tooltip}">
+                </div>
+                <div class="form-group">
+                    <label for="riverSpeed" th:text="#{attribute.river.speed}"></label>
+                    <input type="text" class="form-control" id="riverSpeed"
+                           th:placeholder="#{attribute.river.speed.tooltip}">
+                </div>
+                <div class="form-group">
+                    <label for="radius" th:text="#{attribute.radius}"></label>
+                    <input type="text" class="form-control" id="radius"
+                           th:placeholder="#{attribute.radius.tooltip}">
+                </div>
+                <div class="form-group">
+                    <label for="time" th:text="#{attribute.time}"></label>
+                    <input type="text" class="form-control" id="time" th:placeholder="#{attribute.time.tooltip}">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" th:text="#{simulation.button.text}"></button>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9 map-container mb-3">
+            <img src="https://place-hold.it/1800x1200" class="img-fluid" alt="Map"/>
         </div>
     </div>
 </main>
