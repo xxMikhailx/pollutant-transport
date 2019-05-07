@@ -17,13 +17,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">About us</a>
                 </li>
-
-                <li class="nav-item">
+            </ul>
+            <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLanguageMenu" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                        th:text="#{nav.language.dropdown}">
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownLanguageMenu" th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownLanguageMenu" th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
                         <a th:href="${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ru').toUriString()}" class="dropdown-item">Русский</a>
                         <a th:href="${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}" class="dropdown-item">English</a>
                     </div>
