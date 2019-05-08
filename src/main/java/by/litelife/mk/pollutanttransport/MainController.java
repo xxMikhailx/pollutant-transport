@@ -13,4 +13,9 @@ public class MainController {
         return new ModelAndView("index");
     }
 
+    @GetMapping(value = "/about-app")
+    public ModelAndView about(Model model) {
+        return new ModelAndView("about-application");
+    }
+
 }

@@ -3,7 +3,7 @@
 <html lang="en">
 <div th:replace="~{fragment/head :: head (title=#{index.title})}"></div>
 <body>
-<div th:replace="~{fragment/nav :: nav}"></div>
+<div th:replace="~{fragment/nav :: nav (page=#{pages.index})}"></div>
 
 <main class="container">
     <div class="row">
