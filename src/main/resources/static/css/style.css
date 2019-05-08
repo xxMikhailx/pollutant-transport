@@ -9,6 +9,10 @@ main {
 	flex: 1;
 }
 
+.formula-image {
+    max-height: 250px;
+}
+
 footer {
     background-color: #55585B;
     padding-top: 20px;

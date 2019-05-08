@@ -15,7 +15,7 @@ public class MainController {
 
     @GetMapping(value = "/about-app")
     public ModelAndView about(Model model) {
-        return new ModelAndView("about-application");
+        return new ModelAndView("static/about-application");
     }
 
 }
