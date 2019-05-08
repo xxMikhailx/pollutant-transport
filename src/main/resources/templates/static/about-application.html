@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<div th:replace="~{fragment/head :: head (title=#{about.application.title})}"></div>
+<body>
+<div th:replace="~{fragment/nav :: nav (page=#{pages.about.app})}"></div>
+
+<main class="container">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 offset-lg-3 offset-xl-3 mb-3">
+            <p th:text="#{about.application.concentration.water.formula.title}"></p>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 offset-lg-3 offset-xl-3 mb-3 text-center">
+            <img th:src="@{/images/concentration_water_formula.jpeg}" class="img-fluid formula-image"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 offset-lg-3 offset-xl-3 mb-3">
+            <p th:text="#{about.application.dimensionless.coefficient.formulas.title}"></p>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 offset-lg-3 offset-xl-3 mb-3 text-center">
+            <img th:src="@{/images/dimensionless_coefficient_formulas.jpeg}" class="img-fluid formula-image"/>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragment/footer :: footer}"></div>
+<div th:replace="~{fragment/script :: script}"></div>
+</body>
+</html>
