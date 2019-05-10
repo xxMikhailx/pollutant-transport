@@ -20,6 +20,7 @@
 		<font-awesome.version>5.8.1</font-awesome.version>
 		<jquery.version>3.3.1-1</jquery.version>
 		<popper.js.version>1.14.4</popper.js.version>
+		<leaflet.version>1.4.0</leaflet.version>
 	</properties>
 
 	<dependencies>
@@ -81,6 +82,11 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>popper.js</artifactId>
 			<version>${popper.js.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>leaflet</artifactId>
+			<version>${leaflet.version}</version>
 		</dependency>
 	</dependencies>
 
