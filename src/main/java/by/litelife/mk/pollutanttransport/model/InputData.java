@@ -6,6 +6,8 @@ public class InputData {
     private double riverSpeed;
     private double radius;
     private double time;
+    private double lat;
+    private double lng;
 
     public double getWindSpeed() {
         return windSpeed;
@@ -45,5 +47,21 @@ public class InputData {
 
     public void setTime(double time) {
         this.time = time;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 }
