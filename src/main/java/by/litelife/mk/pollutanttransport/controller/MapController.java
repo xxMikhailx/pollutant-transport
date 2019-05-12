@@ -1,8 +1,9 @@
-package by.litelife.mk.pollutanttransport;
+package by.litelife.mk.pollutanttransport.controller;
 
 import by.litelife.mk.pollutanttransport.model.InputData;
 import by.litelife.mk.pollutanttransport.model.TimeConcentrationPair;
-import by.litelife.mk.pollutanttransport.util.GenerateSimpleGeojson;
+import by.litelife.mk.pollutanttransport.service.MapService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class MainController {
+public class MapController {
+
+    @Autowired
+    private MapService mapService;
 
     @GetMapping(value = "/")
     public ModelAndView main(Model model) {
@@ -28,14 +33,11 @@ public class MainController {
         return new ModelAndView("index");
     }
 
-    @GetMapping(value = "/about-app")
-    public ModelAndView about(Model model) {
-        return new ModelAndView("static/about-application");
-    }
-
     @PostMapping(value = "/simulate")
-    public String simulate(RedirectAttributes redirectAttributes, @ModelAttribute("data") InputData inputData) {
-        redirectAttributes.addFlashAttribute("simulatedGeojson", GenerateSimpleGeojson.generateGeojson());
+    public String simulate(RedirectAttributes redirectAttributes, @ModelAttribute("data") InputData inputData)
+            throws IOException {
+        String simulatedGeoJson = mapService.simulate(inputData);
+        redirectAttributes.addFlashAttribute("simulatedGeojson", simulatedGeoJson);
         redirectAttributes.addFlashAttribute("data", inputData);
         return "redirect:/";
     }
