@@ -8,41 +8,32 @@
 <main class="container">
     <div class="row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container">
-            <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" >
-                <div class="form-group">
-                    <label for="windSpeed" th:text="#{attribute.wind.speed}"></label>
-                    <input type="text" class="form-control" id="windSpeed" th:field="*{windSpeed}"
-                           th:value="${inputData == null} ? 0 : ${inputData.windSpeed}"
-                           th:placeholder="#{attribute.wind.speed.tooltip}">
-                </div>
-                <div class="form-group">
-                    <label for="waterFlow" th:text="#{attribute.water.flow}"></label>
-                    <input type="text" class="form-control" id="waterFlow" th:field="*{waterFlow}"
-                           th:value="${inputData == null} ? 0 : ${inputData.waterFlow}"
-                           th:placeholder="#{attribute.water.flow.tooltip}">
-                </div>
-                <div class="form-group">
-                    <label for="riverSpeed" th:text="#{attribute.river.speed}"></label>
-                    <input type="text" class="form-control" id="riverSpeed" th:field="*{riverSpeed}"
-                           th:value="${inputData == null} ? 0 : ${inputData.riverSpeed}"
-                           th:placeholder="#{attribute.river.speed.tooltip}">
-                </div>
-                <div class="form-group">
-                    <label for="radius" th:text="#{attribute.radius}"></label>
-                    <input type="text" class="form-control" id="radius" th:field="*{radius}"
-                           th:value="${inputData == null} ? 0 : ${inputData.radius}"
-                           th:placeholder="#{attribute.radius.tooltip}">
-                </div>
-                <div class="form-group">
-                    <label for="time" th:text="#{attribute.time}"></label>
-                    <input type="text" class="form-control" id="time" th:field="*{time}"
-                           th:value="${inputData == null} ? 0 : ${inputData.time}"
-                           th:placeholder="#{attribute.time.tooltip}">
-                </div>
+            <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form">
+                    <th:block th:each="timeConcentrationPair,iterator : ${data.timeConcentrationPairs}">
+                        <div class="row time-concentration-pair">
+                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                <label class="time-label" for="time"></label>
+                                <input type="text" class="form-control time-input" id="time"
+                                       th:value="${timeConcentrationPair.time}">
+                            </div>
+                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                <label class="concentration-label" for="concentration"></label>
+                                <input type="text" class="form-control concentration-input" id="concentration"
+                                       th:value="${timeConcentrationPair.concentration}">
+                            </div>
+                            <div class=" col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center" th:if="${iterator.index != 0 && iterator.index != 1}">
+                                <a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a>
+                            </div>
+                        </div>
+                    </th:block>
+                <input type="hidden" th:field="*{timeConcentrationPairsJson}" id="timeConcentrationPairsJson">
                 <input type="hidden" th:field="*{lat}" id="lat" th:value="${inputData == null} ? 0 : ${inputData.lat}">
                 <input type="hidden" th:field="*{lng}" id="lng" th:value="${inputData == null} ? 0 : ${inputData.lng}">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary" th:text="#{simulation.button.text}"></button>
+                <div class="form-group text-center">
+                    <button type="button" class="btn btn-success add-point" th:text="#{add.point.button.text}"></button>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary simulate" th:text="#{simulation.button.text}"></button>
                 </div>
             </form>
         </div>
@@ -59,6 +50,11 @@
     /*<![CDATA[*/
 
     var geoJson = JSON.parse(/*[[${simulatedGeojson}]]*/ 'default');
+    var timeTitle = /*[[#{attribute.time}]]*/ 'time'
+    var concentrationTitle = /*[[#{attribute.concentration}]]*/ 'time'
+
+    $(".time-label").text(timeTitle);
+    $(".concentration-label").text(concentrationTitle);
 
     L.geoJson(geoJson).addTo(mymap);
 
@@ -70,37 +66,9 @@
     }
 
     mymap.on('click', onMapClick);
-
-    function onMapClick(e) {
-        removeMarketOnMap();
-
-        nearestPointId = findNearestPointId(turf.point([e.latlng.lng, e.latlng.lat]));
-        currentMarker = L.marker([svislochRiverCoordinates[nearestPointId][1], svislochRiverCoordinates[nearestPointId][0]]);
-        currentMarker.addTo(mymap);
-
-        $("#lat").val(svislochRiverCoordinates[nearestPointId][1]);
-        $("#lng").val(svislochRiverCoordinates[nearestPointId][0]);
-    }
-
-
-    function findNearestPointId(point) {
-        var minDistance = turf.distance(turf.point([svislochRiverCoordinates[0][0], svislochRiverCoordinates[0][1]]), point);
-        var pointId = 0;
-
-        for (var i = 1; i < svislochRiverCoordinates.length; i++) {
-            var distance = turf.distance(turf.point([svislochRiverCoordinates[i][0], svislochRiverCoordinates[i][1]]), point);
-            if (distance < minDistance) {
-                minDistance = distance;
-                pointId = i;
-            }
-        }
-
-        return pointId;
-    }
-
-    function removeMarketOnMap() {
-        currentMarker.remove();
-    }
+    $(".add-point").on('click', createNewPoint);
+    $(".simulator-form").on('click', ".remove-point", removePoint);
+    $(".simulate").on('click', generateJson);
     /*]]>*/
 </script>
 </body>

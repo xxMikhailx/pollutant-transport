@@ -1,52 +1,35 @@
 package by.litelife.mk.pollutanttransport.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InputData {
-    private double windSpeed;
-    private double waterFlow;
-    private double riverSpeed;
-    private double radius;
-    private double time;
+    private List<TimeConcentrationPair> timeConcentrationPairs;
+    private String timeConcentrationPairsJson;
     private double lat;
     private double lng;
 
-    public double getWindSpeed() {
-        return windSpeed;
+    public InputData() {
+        timeConcentrationPairs = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            timeConcentrationPairs.add(new TimeConcentrationPair());
+        }
     }
 
-    public void setWindSpeed(double windSpeed) {
-        this.windSpeed = windSpeed;
+    public List<TimeConcentrationPair> getTimeConcentrationPairs() {
+        return timeConcentrationPairs;
     }
 
-    public double getWaterFlow() {
-        return waterFlow;
+    public void setTimeConcentrationPairs(List<TimeConcentrationPair> timeConcentrationPairs) {
+        this.timeConcentrationPairs = timeConcentrationPairs;
     }
 
-    public void setWaterFlow(double waterFlow) {
-        this.waterFlow = waterFlow;
+    public String getTimeConcentrationPairsJson() {
+        return timeConcentrationPairsJson;
     }
 
-    public double getRiverSpeed() {
-        return riverSpeed;
-    }
-
-    public void setRiverSpeed(double riverSpeed) {
-        this.riverSpeed = riverSpeed;
-    }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
-    public double getTime() {
-        return time;
-    }
-
-    public void setTime(double time) {
-        this.time = time;
+    public void setTimeConcentrationPairsJson(String timeConcentrationPairsJson) {
+        this.timeConcentrationPairsJson = timeConcentrationPairsJson;
     }
 
     public double getLat() {
