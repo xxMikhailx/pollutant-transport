@@ -21,6 +21,7 @@
 		<jquery.version>3.3.1-1</jquery.version>
 		<popper.js.version>1.14.4</popper.js.version>
 		<leaflet.version>1.4.0</leaflet.version>
+		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -39,6 +40,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 
 		<dependency>
@@ -89,6 +94,18 @@
 			<version>${leaflet.version}</version>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

@@ -1,5 +1,7 @@
 package by.litelife.mk.pollutanttransport.config;
 
+import feign.RequestInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,9 @@ import java.util.Locale;
 
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
+
+    @Value("${api.key.open.weather}")
+    private String openWeatherApiKey;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -48,5 +53,12 @@ public class MvcConfiguration implements WebMvcConfigurer {
     @Bean
     public MessageSourceAccessor getMessageSourceAccessor(final MessageSource messageSource) {
         return new MessageSourceAccessor(messageSource, new Locale("ru", "RU"));
+    }
+
+    @Bean
+    public RequestInterceptor requestInterceptor() {
+        return requestTemplate -> {
+            requestTemplate.query("appid", openWeatherApiKey);
+        };
     }
 }
