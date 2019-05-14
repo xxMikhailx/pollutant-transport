@@ -7,12 +7,17 @@
 
 <main class="container">
     <div class="row">
-        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container" novalidate>
             <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form">
+                    <div class="row text-danger d-none unique-time-value-error-message">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <p th:text="#{unique.time.value.error.message}"></p>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <label for="riverSpeed" th:text="#{attribute.river.speed.tooltip}"></label>
-                            <input type="number" class="form-control river-speed" id="riverSpeed"
+                            <input type="text" class="form-control river-speed" id="riverSpeed"
                                    th:value="${inputData == null} ? 0 : ${inputData.riverSpeed}"
                                    th:field="*{riverSpeed}">
                         </div>
@@ -77,6 +82,10 @@
     $(".add-point").on('click', createNewPoint);
     $(".simulator-form").on('click', ".remove-point", removePoint);
     $(".simulate").on('click', generateJson);
+    $(".simulator-form").on('submit', validateData);
+    $(".simulator-form").on('input', ".concentration-input", validateConcentrationData);
+    $(".simulator-form").on('input', ".time-input", validateTimeData);
+    $(".river-speed").on('input', validateRiverSpeedData);
     /*]]>*/
 </script>
 </body>
