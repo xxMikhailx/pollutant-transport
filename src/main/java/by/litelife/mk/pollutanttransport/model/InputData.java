@@ -11,10 +11,10 @@ public class InputData {
     private double lng;
 
     public InputData() {
-        timeConcentrationPairs = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            timeConcentrationPairs.add(new TimeConcentrationPair());
-        }
+    }
+
+    public InputData(List<TimeConcentrationPair> timeConcentrationPairs) {
+        this.timeConcentrationPairs = timeConcentrationPairs;
     }
 
     public List<TimeConcentrationPair> getTimeConcentrationPairs() {
