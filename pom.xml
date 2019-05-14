@@ -22,6 +22,9 @@
         <popper.js.version>1.14.4</popper.js.version>
         <leaflet.version>1.4.0</leaflet.version>
         <sf-geojson.version>2.0.1</sf-geojson.version>
+        <commons-math3.version>3.6.1</commons-math3.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <guava.version>27.1-jre</guava.version>
     </properties>
 
     <dependencies>
@@ -95,6 +98,23 @@
             <groupId>mil.nga.sf</groupId>
             <artifactId>sf-geojson</artifactId>
             <version>${sf-geojson.version}</version>
+        </dependency>
+
+        <!--Utils-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>${commons-math3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
     </dependencies>
 
