@@ -8,7 +8,8 @@
 <main class="container">
     <div class="row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container mb-3">
-            <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form" novalidate>
+            <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form"
+                  novalidate>
                 <div class="row text-danger d-none incorrect-input-values-error-message">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <p th:text="#{incorrect.input.values.error.message}"></p>
@@ -39,7 +40,8 @@
                     <button type="button" class="btn btn-success w-100" data-toggle="modal"
                             data-target="#pointsModal" th:text="#{set.points.button.text}"></button>
 
-                    <div class="modal fade" id="pointsModal" tabindex="-1" role="dialog" aria-labelledby="pointsModalTitle" aria-hidden="true">
+                    <div class="modal fade" id="pointsModal" tabindex="-1" role="dialog"
+                         aria-labelledby="pointsModalTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
@@ -52,26 +54,33 @@
                                             </div>
                                             <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
                                                 <label class="concentration-label" for="concentration"></label>
-                                                <input type="text" class="form-control concentration-input" id="concentration"
+                                                <input type="text" class="form-control concentration-input"
+                                                       id="concentration"
                                                        th:value="${timeConcentrationPair.concentration}">
                                             </div>
-                                            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center" th:if="${iterator.index != 0 && iterator.index != 1}">
-                                                <a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a>
+                                            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center"
+                                                 th:if="${iterator.index != 0 && iterator.index != 1}">
+                                                <a href="#" class="text-danger mt-3 remove-point"><i
+                                                        class="fas fa-minus"></i></a>
                                             </div>
                                         </div>
                                     </th:block>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-success add-point" th:text="#{add.point.button.text}"></button>
-                                    <button type="button" class="btn btn-danger reset-points" th:text="#{reset.points.button.text}"></button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.close.button.text}"></button>
+                                    <button type="button" class="btn btn-success add-point"
+                                            th:text="#{add.point.button.text}"></button>
+                                    <button type="button" class="btn btn-danger reset-points"
+                                            th:text="#{reset.points.button.text}"></button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                            th:text="#{modal.close.button.text}"></button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary simulate w-100" th:text="#{simulation.button.text}"></button>
+                    <button type="submit" class="btn btn-primary simulate w-100"
+                            th:text="#{simulation.button.text}"></button>
                 </div>
             </form>
         </div>
@@ -96,7 +105,45 @@
     $(".time-label").text(timeTitle);
     $(".concentration-label").text(concentrationTitle);
 
-    L.geoJson(geoJson).addTo(mymap);
+    L.geoJson(geoJson, {
+        style: function (feature) {
+            return {
+                color: feature.properties.color,
+                weight: 8
+            }
+        }
+    }).addTo(mymap);
+
+    function getColor(d) {
+        return d > 0.875 ? '#F2181D' :
+            d > 0.75 ? '#CF311B' :
+                d > 0.625 ? '#AC4A19' :
+                    d > 0.5 ? '#8A6317' :
+                        d > 0.375 ? '#677C16' :
+                            d > 0.25 ? '#459514' :
+                                d > 0.125 ? '#22AE12' :
+                                    '#00C711';
+    }
+
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'legend-info legend'),
+            grades = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1],
+            labels = [];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length - 1; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 0.01) + '"></i> ' +
+                (grades[i + 2] ? grades[i] + '&ndash;' + grades[i + 1] + '<br>' : grades[i] + '&ndash;' + grades[i + 1]);
+        }
+
+        return div;
+    };
+
+    legend.addTo(mymap);
 
     var svislochRiverCoordinates = svislochRiver['features'][0]['geometry']['coordinates'];
 
@@ -105,7 +152,9 @@
         currentMarker.addTo(mymap);
     }
 
-    $(".time-input").map((idx, elem) => $(elem).val(parseInt($(elem).val())));
+    $(".time-input").map((idx, elem) = > $(elem).val(parseInt($(elem).val()))
+    )
+    ;
 
     mymap.on('click', onMapClick);
     $(".add-point").on('click', createNewPoint);
