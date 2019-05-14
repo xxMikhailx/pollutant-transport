@@ -9,36 +9,36 @@
     <div class="row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container" novalidate>
             <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form">
-                    <div class="row text-danger d-none unique-time-value-error-message">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <p th:text="#{unique.time.value.error.message}"></p>
+                <div class="row text-danger d-none unique-time-value-error-message">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <p th:text="#{unique.time.value.error.message}"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <label for="riverSpeed" th:text="#{attribute.river.speed.tooltip}"></label>
+                        <input type="text" class="form-control river-speed" id="riverSpeed"
+                               th:value="${inputData == null} ? 0 : ${inputData.riverSpeed}"
+                               th:field="*{riverSpeed}">
+                    </div>
+                </div>
+                <th:block th:each="timeConcentrationPair,iterator : ${data.timeConcentrationPairs}">
+                    <div class="row time-concentration-pair">
+                        <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                            <label class="time-label" for="time"></label>
+                            <input type="text" class="form-control time-input" id="time"
+                                   th:value="${timeConcentrationPair.time}">
+                        </div>
+                        <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                            <label class="concentration-label" for="concentration"></label>
+                            <input type="text" class="form-control concentration-input" id="concentration"
+                                   th:value="${timeConcentrationPair.concentration}">
+                        </div>
+                        <div class=" col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center" th:if="${iterator.index != 0 && iterator.index != 1}">
+                            <a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <label for="riverSpeed" th:text="#{attribute.river.speed.tooltip}"></label>
-                            <input type="text" class="form-control river-speed" id="riverSpeed"
-                                   th:value="${inputData == null} ? 0 : ${inputData.riverSpeed}"
-                                   th:field="*{riverSpeed}">
-                        </div>
-                    </div>
-                    <th:block th:each="timeConcentrationPair,iterator : ${data.timeConcentrationPairs}">
-                        <div class="row time-concentration-pair">
-                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                                <label class="time-label" for="time"></label>
-                                <input type="text" class="form-control time-input" id="time"
-                                       th:value="${timeConcentrationPair.time}">
-                            </div>
-                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                                <label class="concentration-label" for="concentration"></label>
-                                <input type="text" class="form-control concentration-input" id="concentration"
-                                       th:value="${timeConcentrationPair.concentration}">
-                            </div>
-                            <div class=" col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center" th:if="${iterator.index != 0 && iterator.index != 1}">
-                                <a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a>
-                            </div>
-                        </div>
-                    </th:block>
+                </th:block>
                 <input type="hidden" th:field="*{timeConcentrationPairsJson}" id="timeConcentrationPairsJson">
                 <input type="hidden" th:field="*{lat}" id="lat" th:value="${inputData == null} ? 0 : ${inputData.lat}">
                 <input type="hidden" th:field="*{lng}" id="lng" th:value="${inputData == null} ? 0 : ${inputData.lng}">
