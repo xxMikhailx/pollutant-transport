@@ -2,9 +2,9 @@ var isCorrect = true;
 
 function validateData() {
     isCorrect = true;
-    $(".concentration-input").map((idx, elem) => validateInput($(elem)));
-    $(".time-input").map((idx, elem) => validateInput($(elem)));
-    validateInput($(".river-speed"));
+    $(".concentration-input").map((idx, element) => validateConcentrationData($(element)));
+    $(".time-input").map((idx, element) => validateTimeData($(element)));
+    validateRiverSpeedData($(".river-speed"));
     validateTimeRepeatable();
     if (!isCorrect) {
         $(".incorrect-input-values-error-message").removeClass("d-none");
@@ -12,22 +12,38 @@ function validateData() {
     return isCorrect;
 }
 
-function validateConcentrationData(e) {
-    validateInput($(this));
+function validateConcentrationDataEvent(event) {
+    validateConcentrationData($(this));
 }
 
-function validateTimeData(e) {
-    validateInput($(this));
+function validateTimeDataEvent(event) {
+    validateTimeData($(this));
 }
 
-function validateRiverSpeedData(e) {
-    validateInput($(this));
+function validateRiverSpeedDataEvent(event) {
+    validateRiverSpeedData($(this));
 }
 
-function validateInput(input) {
-    var regular = /^[0-9]{1,10}(\.[0-9]{1,10})?$/;
-    var result = regular.test(input.val());
-    if (result) {
+function validateConcentrationData(element) {
+    var isCorrectConcentration = isPositiveDouble(element.val()) && element.val() <= 100;
+    markInputByValidationResult(element, isCorrectConcentration);
+}
+
+function validateTimeData(element) {
+    markInputByValidationResult(element, isPositiveDouble(element.val()));
+}
+
+function validateRiverSpeedData(element) {
+    markInputByValidationResult(element, isPositiveDouble(element.val()));
+}
+
+function isPositiveDouble(value) {
+    var regular = /^(0|0{1}\.[0-9]{1,10}|[1-9]{1}[0-9]{0,9}(\.[0-9]{1,10})?)$/;
+    return regular.test(value);
+}
+
+function markInputByValidationResult(input, isValid) {
+    if (isValid) {
         input.addClass("is-valid");
         input.removeClass("is-invalid");
     } else {
