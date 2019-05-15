@@ -9,6 +9,14 @@ main {
 	flex: 1;
 }
 
+.time-concentration-pair {
+    width: 100% !important;
+}
+
+.map-container {
+    height: 70vh;
+}
+
 .formula-image {
     max-height: 250px;
 }

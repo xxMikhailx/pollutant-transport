@@ -28,6 +28,11 @@ function removeMarketOnMap() {
     currentMarker.remove();
 }
 
+function resetPoints() {
+    $(".remove-point").map((idx, elem) => $(elem).parent().parent().remove());
+}
+
+
 function createNewPoint() {
     var $newPointTemplate = $('<div class="row time-concentration-pair"><div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5"><label class="time-label" for="time">' + timeTitle + '</label><input type="text" class="form-control time-input" id="time" value="0.0"></div><div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5"><label class="concentration-label" for="concentration">' + concentrationTitle + '</label><input type="text" class="form-control concentration-input" id="concentration" value="0.0"></div><div class=" col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center"><a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a></div></div>');
     $(".time-concentration-pair").last().after($newPointTemplate);

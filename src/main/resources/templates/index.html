@@ -7,8 +7,13 @@
 
 <main class="container">
     <div class="row">
-        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container" novalidate>
-            <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container mb-3">
+            <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form" novalidate>
+                <div class="row text-danger d-none incorrect-input-values-error-message">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <p th:text="#{incorrect.input.values.error.message}"></p>
+                    </div>
+                </div>
                 <div class="row text-danger d-none unique-time-value-error-message">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <p th:text="#{unique.time.value.error.message}"></p>
@@ -22,31 +27,46 @@
                                th:field="*{riverSpeed}">
                     </div>
                 </div>
-                <th:block th:each="timeConcentrationPair,iterator : ${data.timeConcentrationPairs}">
-                    <div class="row time-concentration-pair">
-                        <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                            <label class="time-label" for="time"></label>
-                            <input type="text" class="form-control time-input" id="time"
-                                   th:value="${timeConcentrationPair.time}">
-                        </div>
-                        <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                            <label class="concentration-label" for="concentration"></label>
-                            <input type="text" class="form-control concentration-input" id="concentration"
-                                   th:value="${timeConcentrationPair.concentration}">
-                        </div>
-                        <div class=" col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center" th:if="${iterator.index != 0 && iterator.index != 1}">
-                            <a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a>
-                        </div>
-                    </div>
-                </th:block>
                 <input type="hidden" th:field="*{timeConcentrationPairsJson}" id="timeConcentrationPairsJson">
                 <input type="hidden" th:field="*{lat}" id="lat" th:value="${inputData == null} ? 0 : ${inputData.lat}">
                 <input type="hidden" th:field="*{lng}" id="lng" th:value="${inputData == null} ? 0 : ${inputData.lng}">
-                <div class="form-group text-center">
-                    <button type="button" class="btn btn-success add-point" th:text="#{add.point.button.text}"></button>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success w-100" data-toggle="modal"
+                            data-target="#pointsModal" th:text="#{set.points.button.text}"></button>
+
+                    <div class="modal fade" id="pointsModal" tabindex="-1" role="dialog" aria-labelledby="pointsModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <th:block th:each="timeConcentrationPair,iterator : ${data.timeConcentrationPairs}">
+                                        <div class="row time-concentration-pair">
+                                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                                <label class="time-label" for="time"></label>
+                                                <input type="text" class="form-control time-input" id="time"
+                                                       th:value="${timeConcentrationPair.time}">
+                                            </div>
+                                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
+                                                <label class="concentration-label" for="concentration"></label>
+                                                <input type="text" class="form-control concentration-input" id="concentration"
+                                                       th:value="${timeConcentrationPair.concentration}">
+                                            </div>
+                                            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center" th:if="${iterator.index != 0 && iterator.index != 1}">
+                                                <a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success add-point" th:text="#{add.point.button.text}"></button>
+                                    <button type="button" class="btn btn-danger reset-points" th:text="#{reset.points.button.text}"></button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{modal.close.button.text}"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary simulate" th:text="#{simulation.button.text}"></button>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary simulate w-100" th:text="#{simulation.button.text}"></button>
                 </div>
             </form>
         </div>
@@ -82,6 +102,7 @@
 
     mymap.on('click', onMapClick);
     $(".add-point").on('click', createNewPoint);
+    $(".reset-points").on('click', resetPoints);
     $(".simulator-form").on('click', ".remove-point", removePoint);
     $(".simulate").on('click', generateJson);
     $(".simulator-form").on('submit', validateData);

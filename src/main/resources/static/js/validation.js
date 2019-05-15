@@ -6,6 +6,9 @@ function validateData() {
     $(".time-input").map((idx, elem) => validateInput($(elem)));
     validateInput($(".river-speed"));
     validateTimeRepeatable();
+    if (!isCorrect) {
+        $(".incorrect-input-values-error-message").removeClass("d-none");
+    }
     return isCorrect;
 }
 
