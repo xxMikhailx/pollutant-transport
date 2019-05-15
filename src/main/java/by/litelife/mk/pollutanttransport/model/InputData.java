@@ -1,12 +1,11 @@
 package by.litelife.mk.pollutanttransport.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InputData {
     private List<TimeConcentrationPair> timeConcentrationPairs;
     private String timeConcentrationPairsJson;
-    private double riverSpeed;
+    private double riverSpeed = 0.1;
     private double lat;
     private double lng;
 

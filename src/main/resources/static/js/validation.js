@@ -34,7 +34,8 @@ function validateTimeData(element) {
 }
 
 function validateRiverSpeedData(element) {
-    markInputByValidationResult(element, isPositiveDouble(element.val()));
+    var isCorrectRiverSpeed = isPositiveDouble(element.val()) && element.val() >= 0.1 && element.val() <= 2;
+    markInputByValidationResult(element, isCorrectRiverSpeed);
 }
 
 function isPositiveInteger(value) {
