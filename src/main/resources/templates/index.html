@@ -106,9 +106,9 @@
     $(".simulator-form").on('click', ".remove-point", removePoint);
     $(".simulate").on('click', generateJson);
     $(".simulator-form").on('submit', validateData);
-    $(".simulator-form").on('input', ".concentration-input", validateConcentrationData);
-    $(".simulator-form").on('input', ".time-input", validateTimeData);
-    $(".river-speed").on('input', validateRiverSpeedData);
+    $(".simulator-form").on('input', ".concentration-input", validateConcentrationDataEvent);
+    $(".simulator-form").on('input', ".time-input", validateTimeDataEvent);
+    $(".river-speed").on('input', validateRiverSpeedDataEvent);
     /*]]>*/
 </script>
 </body>
