@@ -30,11 +30,16 @@ function validateConcentrationData(element) {
 }
 
 function validateTimeData(element) {
-    markInputByValidationResult(element, isPositiveDouble(element.val()));
+    markInputByValidationResult(element, isPositiveInteger(element.val()));
 }
 
 function validateRiverSpeedData(element) {
     markInputByValidationResult(element, isPositiveDouble(element.val()));
+}
+
+function isPositiveInteger(value) {
+    var regular = /^(0|[1-9]{1}[0-9]{0,9})$/;
+    return regular.test(value);
 }
 
 function isPositiveDouble(value) {
