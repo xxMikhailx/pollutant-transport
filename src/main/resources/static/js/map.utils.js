@@ -30,6 +30,8 @@ function removeMarketOnMap() {
 
 function resetPoints() {
     $(".remove-point").map((idx, elem) => $(elem).parent().parent().remove());
+    $(".concentration-input").map((idx, element) => $(element).val("0.0"));
+    $(".time-input").map((idx, element) => $(element).val(0));
 }
 
 
