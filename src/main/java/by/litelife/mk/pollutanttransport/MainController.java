@@ -20,7 +20,9 @@ public class MainController {
     @GetMapping(value = "/")
     public ModelAndView main(Model model) {
         if (!model.containsAttribute("data")) {
-            model.addAttribute("data", new InputData(generateTimeConcentrationPairList()));
+            InputData inputData = new InputData(generateTimeConcentrationPairList());
+            inputData.setRiverSpeed(0.1);
+            model.addAttribute("data", inputData);
         }
 
         return new ModelAndView("index");

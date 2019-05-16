@@ -1,22 +1,22 @@
 package by.litelife.mk.pollutanttransport.model;
 
 public class TimeConcentrationPair {
-    private int time;
+    private double time;
     private double concentration;
 
     public TimeConcentrationPair() {
     }
 
-    public TimeConcentrationPair(int time, double concentration) {
+    public TimeConcentrationPair(double time, double concentration) {
         this.time = time;
         this.concentration = concentration;
     }
 
-    public int getTime() {
+    public double getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(double time) {
         this.time = time;
     }
 

@@ -5,7 +5,7 @@ import java.util.List;
 public class InputData {
     private List<TimeConcentrationPair> timeConcentrationPairs;
     private String timeConcentrationPairsJson;
-    private double riverSpeed = 0.1;
+    private double riverSpeed;
     private double lat;
     private double lng;
 
