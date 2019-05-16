@@ -45,7 +45,7 @@ function validateConcentrationDecreaseOverTime () {
         timeConcentrationPairs.set(timeList[i], concentrationList[i]);
     }
 
-    var mapValues = Array.from(new Map([...timeConcentrationPairs.entries()].sort()).values());
+    var mapValues = Array.from(new Map([...timeConcentrationPairs.entries()].sort((a,b) => a[0] > b[0])).values());
 
     for (var i = 0; i < mapValues.length - 1; i++) {
         if(parseFloat(mapValues[i]) < parseFloat(mapValues[i+1])) {
