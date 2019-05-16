@@ -21,7 +21,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <label for="riverSpeed" th:text="#{attribute.river.speed.tooltip}"></label>
+                        <label for="riverSpeed" th:text="#{attribute.river.speed}"></label>
                         <input type="text" class="form-control river-speed" id="riverSpeed"
                                th:value="${inputData == null} ? 0 : ${inputData.riverSpeed}"
                                th:field="*{riverSpeed}">
