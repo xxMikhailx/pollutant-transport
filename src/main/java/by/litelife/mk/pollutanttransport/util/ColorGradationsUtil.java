@@ -29,6 +29,6 @@ public final class ColorGradationsUtil {
                 return entry.getValue();
             }
         }
-        throw new RuntimeException("Concentration is not in scope of 0 to 1.");
+        throw new RuntimeException(String.format("Concentration %f is not in scope of 0 to 1.", concentration));
     }
 }

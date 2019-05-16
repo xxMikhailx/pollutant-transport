@@ -49,7 +49,7 @@
                                         <div class="row time-concentration-pair">
                                             <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
                                                 <label class="time-label" for="time"></label>
-                                                <input type="text" class="form-control time-input" id="time"
+                                                <input type="number" class="form-control time-input" id="time" min="0" step="1"
                                                        th:value="${timeConcentrationPair.time}">
                                             </div>
                                             <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
@@ -115,13 +115,13 @@
     }).addTo(mymap);
 
     function getColor(d) {
-        return d > 0.875 ? '#F2181D' :
-            d > 0.75 ? '#CF311B' :
-                d > 0.625 ? '#AC4A19' :
-                    d > 0.5 ? '#8A6317' :
-                        d > 0.375 ? '#677C16' :
-                            d > 0.25 ? '#459514' :
-                                d > 0.125 ? '#22AE12' :
+        return d > 87.5 ? '#F2181D' :
+            d > 75 ? '#CF311B' :
+                d > 62.5 ? '#AC4A19' :
+                    d > 50 ? '#8A6317' :
+                        d > 37.5 ? '#677C16' :
+                            d > 25 ? '#459514' :
+                                d > 12.5 ? '#22AE12' :
                                     '#00C711';
     }
 
@@ -130,14 +130,14 @@
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'legend-info legend'),
-            grades = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1],
+            grades = [0, 12.5, 25, 37.5, 50, 62.5, 75, 87.5, 100],
             labels = [];
 
-        // loop through our density intervals and generate a label with a colored square for each interval
         for (var i = 0; i < grades.length - 1; i++) {
             div.innerHTML +=
                 '<i style="background:' + getColor(grades[i] + 0.01) + '"></i> ' +
-                (grades[i + 2] ? grades[i] + '&ndash;' + grades[i + 1] + '<br>' : grades[i] + '&ndash;' + grades[i + 1]);
+                (grades[i + 2] ? grades[i] + '&percnt;' + '&ndash;' + grades[i + 1] + '&percnt;' + '<br>'
+                    : grades[i] + '&percnt;' + '&ndash;' + grades[i + 1] + '&percnt;');
         }
 
         return div;
@@ -152,9 +152,7 @@
         currentMarker.addTo(mymap);
     }
 
-    $(".time-input").map((idx, elem) = > $(elem).val(parseInt($(elem).val()))
-    )
-    ;
+    $(".time-input").map((idx, elem) => $(elem).val(parseInt($(elem).val())));
 
     mymap.on('click', onMapClick);
     $(".add-point").on('click', createNewPoint);
