@@ -12,6 +12,8 @@ import mil.nga.sf.geojson.Geometry;
 import mil.nga.sf.geojson.LineString;
 import mil.nga.sf.geojson.Position;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -24,8 +26,11 @@ import java.util.List;
 
 @Service
 public class MapService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MapService.class);
     private static final String CONCENTRATION_PARAMETER = "concentration";
     private static final String COLOR_PARAMETER = "color";
+    private static final double CONCENTRATION_MIN = 0;
+    private static final double CONCENTRATION_MAX = 1;
 
     @Value("classpath:static/geojson/svisloch-java.geojson")
     Resource svislochRiver;
@@ -36,6 +41,7 @@ public class MapService {
                 .toArray();
         double[] concentrationValues = inputData.getTimeConcentrationPairs().stream()
                 .mapToDouble(TimeConcentrationPair::getConcentration)
+                .map(c -> c / 100)
                 .toArray();
 
         PolynomialFunctionLagrangeForm interpolateFunction = GeoUtil.linearInterpolateFunction(timeValues,
@@ -49,7 +55,7 @@ public class MapService {
         double currentConcentration = 1.0;
         int i = 0;
         double timeInMins = 0;
-        while (currentConcentration > 0.1 && i < subPositionList.size() - 1) {
+        while (currentConcentration > 0.1 && currentConcentration <= CONCENTRATION_MAX && i < subPositionList.size() - 1) {
             Position currentPosition = subPositionList.get(i);
             Position nextPosition = subPositionList.get(i + 1);
 
@@ -59,15 +65,31 @@ public class MapService {
             double distance = GeoUtil.distance(currentPosition, nextPosition);
             timeInMins += (distance / inputData.getRiverSpeed()) / 60;
             currentConcentration = interpolateFunction.value(timeInMins);
-            String currentColor = ColorGradationsUtil.getColor(currentConcentration);
 
-            currentFeature.setProperties(ImmutableMap.of(CONCENTRATION_PARAMETER, currentConcentration,
-                    COLOR_PARAMETER, currentColor));
-            simulationResult.addFeature(currentFeature);
+            if (currentConcentration < CONCENTRATION_MIN) {
+                LOGGER.warn("Concentration {} is less than 0.", currentConcentration);
+                addFeatureProperties(CONCENTRATION_MIN, currentFeature, simulationResult);
+                continue;
+
+            } else if (currentConcentration > CONCENTRATION_MAX) {
+                LOGGER.warn("Concentration {} is greater than 1.", currentConcentration);
+                addFeatureProperties(CONCENTRATION_MAX, currentFeature, simulationResult);
+                continue;
+            }
+
+            addFeatureProperties(currentConcentration, currentFeature, simulationResult);
             i++;
         }
 
         return FeatureConverter.toStringValue(simulationResult);
+    }
+
+    private void addFeatureProperties(double concentration, Feature feature, FeatureCollection featureCollection) {
+        String currentColor = ColorGradationsUtil.getColor(concentration);
+
+        feature.setProperties(ImmutableMap.of(CONCENTRATION_PARAMETER, concentration,
+                COLOR_PARAMETER, currentColor));
+        featureCollection.addFeature(feature);
     }
 
     private List<Position> extractPositionList(Resource geoJsonResource) throws IOException {
