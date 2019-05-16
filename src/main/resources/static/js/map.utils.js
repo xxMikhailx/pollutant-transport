@@ -48,14 +48,14 @@ function generateJson() {
     var timeList = $(".time-input").map((idx, elem) => $(elem).val()).get();
     var concentrationList = $(".concentration-input").map((idx, elem) => $(elem).val()).get();
 
-    var result = "[";
+    var pairList = [];
     for (var i = 0; i < timeList.length; i++) {
-        result = result + "{\"concentration\": " + concentrationList[i] + ",\"time\": " + timeList[i] + "}";
-        if (i !== timeList.length - 1) {
-            result = result + ",";
-        }
+        var pair = {
+            time: timeList[i],
+            concentration: concentrationList[i]
+        };
+        pairList.push(pair);
     }
-    result = result + "]"
 
-    $("#timeConcentrationPairsJson").val(result);
+    $("#timeConcentrationPairsJson").val(JSON.stringify(pairList));
 }
