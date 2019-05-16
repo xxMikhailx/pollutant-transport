@@ -105,6 +105,8 @@
         currentMarker.addTo(mymap);
     }
 
+    $(".time-input").map((idx, elem) => $(elem).val(parseInt($(elem).val())));
+
     mymap.on('click', onMapClick);
     $(".add-point").on('click', createNewPoint);
     $(".reset-points").on('click', resetPoints);
