@@ -1,8 +1,9 @@
 var isCorrect = true;
 
-function validateDataEvent(event) {
+function validateDataEvent() {
     validateData();
-    return isCorrect;
+    showOrHideErrorMessage($(".empty-river-point-error-message"), isPickedRiverPoint);
+    return isCorrect && isPickedRiverPoint;
 }
 
 function validateData() {

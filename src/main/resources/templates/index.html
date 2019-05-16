@@ -25,6 +25,11 @@
                         <p th:text="#{concentration.decrease.over.time.error.message}"></p>
                     </div>
                 </div>
+                <div class="row text-danger d-none empty-river-point-error-message">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <p th:text="#{empty.river.point.error.message}"></p>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <label for="riverSpeed" th:text="#{attribute.river.speed}"></label>
@@ -54,7 +59,7 @@
                                             </div>
                                             <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
                                                 <label class="concentration-label" for="concentration"></label>
-                                                <input type="text" class="form-control concentration-input"
+                                                <input type="number" class="form-control concentration-input"
                                                        id="concentration"
                                                        th:value="${timeConcentrationPair.concentration}">
                                             </div>
@@ -100,8 +105,8 @@
 
     var geoJson = JSON.parse(/*[[${simulatedGeojson}]]*/ 'default');
     var timeTitle = /*[[#{attribute.time}]]*/ 'time';
-    var concentrationTitle = /*[[#{attribute.concentration}]]*/ 'time';
-
+    var concentrationTitle = /*[[#{attribute.concentration}]]*/ 'concentration';
+    var isPickedRiverPoint = geoJson !== null;
     $(".time-label").text(timeTitle);
     $(".concentration-label").text(concentrationTitle);
 
@@ -148,7 +153,7 @@
     var svislochRiverCoordinates = svislochRiver['features'][0]['geometry']['coordinates'];
 
     var currentMarker = L.marker([$("#lat").val(), $("#lng").val()]);
-    if ($("#lat").val() !== 0 || $("#lng").val() !== 0) {
+    if (isPickedRiverPoint) {
         currentMarker.addTo(mymap);
     }
 

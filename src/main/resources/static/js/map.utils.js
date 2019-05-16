@@ -7,6 +7,8 @@ function onMapClick(e) {
 
     $("#lat").val(svislochRiverCoordinates[nearestPointId][1]);
     $("#lng").val(svislochRiverCoordinates[nearestPointId][0]);
+    isPickedRiverPoint = true;
+    showOrHideErrorMessage($(".empty-river-point-error-message"), isPickedRiverPoint);
 }
 
 function findNearestPointId(point) {
