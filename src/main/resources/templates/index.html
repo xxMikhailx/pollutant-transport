@@ -105,10 +105,13 @@
     $(".reset-points").on('click', resetPoints);
     $(".simulator-form").on('click', ".remove-point", removePoint);
     $(".simulate").on('click', generateJson);
-    $(".simulator-form").on('submit', validateData);
-    $(".simulator-form").on('input', ".concentration-input", validateConcentrationDataEvent);
-    $(".simulator-form").on('input', ".time-input", validateTimeDataEvent);
-    $(".river-speed").on('input', validateRiverSpeedDataEvent);
+    $(".simulator-form").on('submit', validateDataEvent);
+    $(".simulator-form").on('input', ".concentration-input", validateData);
+    $(".simulator-form").on('input', ".time-input", validateData);
+    $(".river-speed").on('input', validateData);
+    $(".reset-points").on('click', validateData);
+    $(".add-point").on('click', validateData);
+    $(".simulator-form").on('click', ".remove-point", validateData);
     /*]]>*/
 </script>
 </body>
