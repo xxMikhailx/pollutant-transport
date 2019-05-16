@@ -1,27 +1,17 @@
 var isCorrect = true;
 
+function validateDataEvent(event) {
+    validateData();
+    return isCorrect;
+}
+
 function validateData() {
     isCorrect = true;
     $(".concentration-input").map((idx, element) => validateConcentrationData($(element)));
     $(".time-input").map((idx, element) => validateTimeData($(element)));
     validateRiverSpeedData($(".river-speed"));
+    showOrHideErrorMessage($(".incorrect-input-values-error-message"), isCorrect);
     validateTimeRepeatable();
-    if (!isCorrect) {
-        $(".incorrect-input-values-error-message").removeClass("d-none");
-    }
-    return isCorrect;
-}
-
-function validateConcentrationDataEvent(event) {
-    validateConcentrationData($(this));
-}
-
-function validateTimeDataEvent(event) {
-    validateTimeData($(this));
-}
-
-function validateRiverSpeedDataEvent(event) {
-    validateRiverSpeedData($(this));
 }
 
 function validateConcentrationData(element) {
@@ -38,14 +28,10 @@ function validateRiverSpeedData(element) {
     markInputByValidationResult(element, isCorrectRiverSpeed);
 }
 
-function isPositiveInteger(value) {
-    var regular = /^(0|[1-9]{1}[0-9]{0,9})$/;
-    return regular.test(value);
-}
-
-function isPositiveDouble(value) {
-    var regular = /^(0|0{1}\.[0-9]{1,10}|[1-9]{1}[0-9]{0,9}(\.[0-9]{1,10})?)$/;
-    return regular.test(value);
+function validateTimeRepeatable() {
+    var errorMessage = $(".unique-time-value-error-message");
+    var timeValues = $(".time-input").map((idx, elem) => $(elem).val()).get();
+    showOrHideErrorMessage(errorMessage, isUniqueArray(timeValues));
 }
 
 function markInputByValidationResult(input, isValid) {
@@ -59,16 +45,23 @@ function markInputByValidationResult(input, isValid) {
     }
 }
 
-function validateTimeRepeatable() {
-    var errorMessage = $(".unique-time-value-error-message");
-    var timeValues = $(".time-input").map((idx, elem) => $(elem).val()).get();
-
-    if (!isUniqueArray(timeValues)) {
+function showOrHideErrorMessage(errorMessage, correctParameter) {
+    if (!correctParameter) {
         errorMessage.removeClass("d-none");
         isCorrect = false;
     } else if(!errorMessage.hasClass("d-none")){
         errorMessage.addClass("d-none");
     }
+}
+
+function isPositiveInteger(value) {
+    var regular = /^(0|[1-9]{1}[0-9]{0,9})$/;
+    return regular.test(value);
+}
+
+function isPositiveDouble(value) {
+    var regular = /^(0|0{1}\.[0-9]{1,10}|[1-9]{1}[0-9]{0,9}(\.[0-9]{1,10})?)$/;
+    return regular.test(value);
 }
 
 function isUniqueArray(array) {
