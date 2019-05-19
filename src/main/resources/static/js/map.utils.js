@@ -1,63 +1,15 @@
 function onMapClick(e) {
     removeMarketOnMap();
 
-    nearestPointId = findNearestPointId(turf.point([e.latlng.lng, e.latlng.lat]));
-    currentMarker = L.marker([svislochRiverCoordinates[nearestPointId][1], svislochRiverCoordinates[nearestPointId][0]]);
+    currentMarker = L.marker([e.latlng.lat, e.latlng.lng]);
     currentMarker.addTo(mymap);
 
-    $("#lat").val(svislochRiverCoordinates[nearestPointId][1]);
-    $("#lng").val(svislochRiverCoordinates[nearestPointId][0]);
-    isPickedRiverPoint = true;
-    showOrHideErrorMessage($(".empty-river-point-error-message"), isPickedRiverPoint);
-}
-
-function findNearestPointId(point) {
-    var minDistance = turf.distance(turf.point([svislochRiverCoordinates[0][0], svislochRiverCoordinates[0][1]]), point);
-    var pointId = 0;
-
-    for (var i = 1; i < svislochRiverCoordinates.length; i++) {
-        var distance = turf.distance(turf.point([svislochRiverCoordinates[i][0], svislochRiverCoordinates[i][1]]), point);
-        if (distance < minDistance) {
-            minDistance = distance;
-            pointId = i;
-        }
-    }
-
-    return pointId;
+    $("#lat").val(e.latlng.lat);
+    $("#lng").val(e.latlng.lng);
+    isPickedMapPoint = true;
+    showOrHideErrorMessage($(".empty-map-point-error-message"), isPickedMapPoint);
 }
 
 function removeMarketOnMap() {
     currentMarker.remove();
-}
-
-function resetPoints() {
-    $(".remove-point").map((idx, elem) => $(elem).parent().parent().remove());
-    $(".concentration-input").map((idx, element) => $(element).val("0.0"));
-    $(".time-input").map((idx, element) => $(element).val(0));
-}
-
-
-function createNewPoint() {
-    var $newPointTemplate = $('<div class="row time-concentration-pair"><div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5"><label class="time-label" for="time">' + timeTitle + '</label><input type="number" class="form-control time-input" id="time" min="0" step="1" value="0"></div><div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5"><label class="concentration-label" for="concentration">' + concentrationTitle + '</label><input type="text" class="form-control concentration-input" id="concentration" value="0.0"></div><div class=" col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center"><a href="#" class="text-danger mt-3 remove-point"><i class="fas fa-minus"></i></a></div></div>');
-    $(".time-concentration-pair").last().after($newPointTemplate);
-}
-
-function removePoint(e) {
-    $(this).parent().parent().remove();
-}
-
-function generateJson() {
-    var timeList = $(".time-input").map((idx, elem) => $(elem).val()).get();
-    var concentrationList = $(".concentration-input").map((idx, elem) => $(elem).val()).get();
-
-    var pairList = [];
-    for (var i = 0; i < timeList.length; i++) {
-        var pair = {
-            time: timeList[i],
-            concentration: concentrationList[i]
-        };
-        pairList.push(pair);
-    }
-
-    $("#timeConcentrationPairsJson").val(JSON.stringify(pairList));
 }
