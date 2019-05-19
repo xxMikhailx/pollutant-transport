@@ -20,7 +20,7 @@ function validateCoefficientFData(element) {
 }
 
 function validateConcentrationData(element) {
-    var isCorrectConcentration = isPositiveDouble(element.val()) && element.val() >= 1 && element.val() <= 500;
+    var isCorrectConcentration = isPositiveDouble(element.val()) && element.val() >= 1 && element.val() <= 5;
     markInputByValidationResult(element, isCorrectConcentration);
 }
 
