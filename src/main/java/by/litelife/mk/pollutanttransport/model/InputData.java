@@ -1,21 +1,37 @@
 package by.litelife.mk.pollutanttransport.model;
 
-import java.util.List;
-
 public class InputData {
-    private double riverSpeed;
+    private double coefficientF;
+    private double concentration;
+    private double radius;
     private double lat;
     private double lng;
 
     public InputData() {
     }
 
-    public double getRiverSpeed() {
-        return riverSpeed;
+    public double getCoefficientF() {
+        return coefficientF;
     }
 
-    public void setRiverSpeed(double riverSpeed) {
-        this.riverSpeed = riverSpeed;
+    public void setCoefficientF(double coefficientF) {
+        this.coefficientF = coefficientF;
+    }
+
+    public double getConcentration() {
+        return concentration;
+    }
+
+    public void setConcentration(double concentration) {
+        this.concentration = concentration;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 
     public double getLat() {

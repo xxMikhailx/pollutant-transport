@@ -22,17 +22,30 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <label for="riverSpeed" th:text="#{attribute.river.speed}"></label>
-                        <input type="text" class="form-control river-speed" id="riverSpeed"
-                               th:value="${inputData == null} ? 0 : ${inputData.riverSpeed}"
-                               th:field="*{riverSpeed}">
+                        <label for="coefficientF" th:text="#{attribute.coefficient.f}"></label>
+                        <input type="text" class="form-control coefficient-f" id="coefficientF"
+                               th:value="${inputData == null} ? 1 : ${inputData.coefficientF}"
+                               th:field="*{coefficientF}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <label for="concentration" th:text="#{attribute.concentration}"></label>
+                        <input type="text" class="form-control concentration" id="concentration"
+                               th:value="${inputData == null} ? 1 : ${inputData.concentration}"
+                               th:field="*{concentration}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <label for="radius" th:text="#{attribute.radius}"></label>
+                        <input type="text" class="form-control radius" id="radius"
+                               th:value="${inputData == null} ? 1 : ${inputData.radius}"
+                               th:field="*{radius}">
                     </div>
                 </div>
                 <input type="hidden" th:field="*{lat}" id="lat" th:value="${inputData == null} ? 0 : ${inputData.lat}">
                 <input type="hidden" th:field="*{lng}" id="lng" th:value="${inputData == null} ? 0 : ${inputData.lng}">
-                <div class="form-group">
-
-                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary simulate w-100"
                             th:text="#{simulation.button.text}"></button>
@@ -102,10 +115,9 @@
 
     mymap.on('click', onMapClick);
     $(".simulator-form").on('submit', validateDataEvent);
-    $(".river-speed").on('input', validateData);
-    $(".reset-points").on('click', validateData);
-    $(".add-point").on('click', validateData);
-    $(".simulator-form").on('click', ".remove-point", validateData);
+    $(".coefficient-f").on('input', validateData);
+    $(".concentration").on('input', validateData);
+    $(".radius").on('input', validateData);
     /*]]>*/
 </script>
 </body>
