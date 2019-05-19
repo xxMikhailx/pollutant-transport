@@ -15,19 +15,9 @@
                         <p th:text="#{incorrect.input.values.error.message}"></p>
                     </div>
                 </div>
-                <div class="row text-danger d-none unique-time-value-error-message">
+                <div class="row text-danger d-none empty-map-point-error-message">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <p th:text="#{unique.time.value.error.message}"></p>
-                    </div>
-                </div>
-                <div class="row text-danger d-none concentration-decrease-over-time-error-message">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <p th:text="#{concentration.decrease.over.time.error.message}"></p>
-                    </div>
-                </div>
-                <div class="row text-danger d-none empty-river-point-error-message">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <p th:text="#{empty.river.point.error.message}"></p>
+                        <p th:text="#{empty.map.point.error.message}"></p>
                     </div>
                 </div>
                 <div class="row">
@@ -38,50 +28,10 @@
                                th:field="*{riverSpeed}">
                     </div>
                 </div>
-                <input type="hidden" th:field="*{timeConcentrationPairsJson}" id="timeConcentrationPairsJson">
                 <input type="hidden" th:field="*{lat}" id="lat" th:value="${inputData == null} ? 0 : ${inputData.lat}">
                 <input type="hidden" th:field="*{lng}" id="lng" th:value="${inputData == null} ? 0 : ${inputData.lng}">
                 <div class="form-group">
-                    <button type="button" class="btn btn-success w-100" data-toggle="modal"
-                            data-target="#pointsModal" th:text="#{set.points.button.text}"></button>
 
-                    <div class="modal fade" id="pointsModal" tabindex="-1" role="dialog"
-                         aria-labelledby="pointsModalTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <th:block th:each="timeConcentrationPair,iterator : ${data.timeConcentrationPairs}">
-                                        <div class="row time-concentration-pair">
-                                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                                                <label class="time-label" for="time"></label>
-                                                <input type="number" class="form-control time-input" id="time" min="0" step="1"
-                                                       th:value="${timeConcentrationPair.time}">
-                                            </div>
-                                            <div class="form-group col-5 col-sm-5 col-md-5 col-lg-5 col-xl-5">
-                                                <label class="concentration-label" for="concentration"></label>
-                                                <input type="number" class="form-control concentration-input"
-                                                       id="concentration"
-                                                       th:value="${timeConcentrationPair.concentration}">
-                                            </div>
-                                            <div class="col-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center"
-                                                 th:if="${iterator.index != 0 && iterator.index != 1}">
-                                                <a href="#" class="text-danger mt-3 remove-point"><i
-                                                        class="fas fa-minus"></i></a>
-                                            </div>
-                                        </div>
-                                    </th:block>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-success add-point"
-                                            th:text="#{add.point.button.text}"></button>
-                                    <button type="button" class="btn btn-danger reset-points"
-                                            th:text="#{reset.points.button.text}"></button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                            th:text="#{modal.close.button.text}"></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary simulate w-100"
@@ -96,7 +46,6 @@
 
 <div th:replace="~{fragment/footer :: footer}"></div>
 <div th:replace="~{fragment/script :: script}"></div>
-<script th:src="@{/geojson/svisloch.geojson.js}"></script>
 <script th:src="@{/js/map.js}"></script>
 <script th:src="@{/js/map.utils.js}"></script>
 <script th:src="@{/js/validation.js}"></script>
@@ -104,11 +53,7 @@
     /*<![CDATA[*/
 
     var geoJson = JSON.parse(/*[[${simulatedGeojson}]]*/ 'default');
-    var timeTitle = /*[[#{attribute.time}]]*/ 'time';
-    var concentrationTitle = /*[[#{attribute.concentration}]]*/ 'concentration';
-    var isPickedRiverPoint = geoJson !== null;
-    $(".time-label").text(timeTitle);
-    $(".concentration-label").text(concentrationTitle);
+    var isPickedMapPoint = geoJson !== null;
 
     L.geoJson(geoJson, {
         style: function (feature) {
@@ -150,23 +95,13 @@
 
     legend.addTo(mymap);
 
-    var svislochRiverCoordinates = svislochRiver['features'][0]['geometry']['coordinates'];
-
     var currentMarker = L.marker([$("#lat").val(), $("#lng").val()]);
-    if (isPickedRiverPoint) {
+    if (isPickedMapPoint) {
         currentMarker.addTo(mymap);
     }
 
-    $(".time-input").map((idx, elem) => $(elem).val(parseInt($(elem).val())));
-
     mymap.on('click', onMapClick);
-    $(".add-point").on('click', createNewPoint);
-    $(".reset-points").on('click', resetPoints);
-    $(".simulator-form").on('click', ".remove-point", removePoint);
-    $(".simulate").on('click', generateJson);
     $(".simulator-form").on('submit', validateDataEvent);
-    $(".simulator-form").on('input', ".concentration-input", validateData);
-    $(".simulator-form").on('input', ".time-input", validateData);
     $(".river-speed").on('input', validateData);
     $(".reset-points").on('click', validateData);
     $(".add-point").on('click', validateData);
