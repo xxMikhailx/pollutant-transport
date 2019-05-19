@@ -1,70 +1,88 @@
 package by.litelife.mk.pollutanttransport.service;
 
+import by.litelife.mk.pollutanttransport.client.OpenWeatherMapClient;
+import by.litelife.mk.pollutanttransport.client.dto.LatLon;
+import by.litelife.mk.pollutanttransport.client.dto.WeatherApi3HourlyResponse;
+import by.litelife.mk.pollutanttransport.client.dto.WeatherApiFullResponse;
+import by.litelife.mk.pollutanttransport.client.dto.Wind;
 import by.litelife.mk.pollutanttransport.model.InputData;
+import by.litelife.mk.pollutanttransport.util.CalculationUtil;
 import by.litelife.mk.pollutanttransport.util.ColorGradationsUtil;
-import by.litelife.mk.pollutanttransport.util.GeoUtil;
 import com.google.common.collect.ImmutableMap;
 import mil.nga.sf.geojson.Feature;
 import mil.nga.sf.geojson.FeatureCollection;
 import mil.nga.sf.geojson.FeatureConverter;
-import mil.nga.sf.geojson.Geometry;
-import mil.nga.sf.geojson.LineString;
+import mil.nga.sf.geojson.Point;
+import mil.nga.sf.geojson.Polygon;
 import mil.nga.sf.geojson.Position;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MapService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MapService.class);
     private static final String CONCENTRATION_PARAMETER = "concentration";
     private static final String COLOR_PARAMETER = "color";
-    private static final double CONCENTRATION_MIN = 0;
-    private static final double CONCENTRATION_MAX = 1;
+    private static final int ITERATIONS_NUMBER = 36;
+    private static final double ITERATION_TIME_SEC = (180 / ITERATIONS_NUMBER) * 60;
 
-    public String simulate(InputData inputData) throws IOException {
-        double[] timeValues = {1, 2, 3};
-        double[] concentrationValues = {1, 2, 3};
+    @Autowired
+    private OpenWeatherMapClient openWeatherMapClient;
 
+    public String simulate(InputData inputData) {
         FeatureCollection simulationResult = new FeatureCollection();
 
-        ArrayList<Position> positionList = new ArrayList<>();
-        int startIndex = getIndexByLonLat(inputData.getLng(), inputData.getLat(), positionList);
-        ArrayList<Position> subPositionList = new ArrayList<>(positionList.subList(startIndex, positionList.size() - 1));
+        WeatherApiFullResponse weatherApiFullResponse = openWeatherMapClient.getWinds(new LatLon(inputData.getLat(),
+                inputData.getLng()));
+        List<WeatherApi3HourlyResponse> hourly3Requests = weatherApiFullResponse.getHourly3Requests();
 
-        double currentConcentration = 1.0;
-        int i = 0;
-        double timeInMins = 0;
-        while (currentConcentration > 0.1 && currentConcentration <= CONCENTRATION_MAX && i < subPositionList.size() - 1) {
-            Position currentPosition = subPositionList.get(i);
-            Position nextPosition = subPositionList.get(i + 1);
+        //Draw a circle
+        Wind firstWind = hourly3Requests.get(0).getWind();
+        Position circleCenterPosition = new Position(inputData.getLng(), inputData.getLat());
+        Point circleCenter = new Point(circleCenterPosition);
+        Feature circleFeature = new Feature(circleCenter);
+        addFeatureProperties(inputData.getConcentration(), circleFeature, simulationResult);
 
-            LineString currentLine = new LineString(Arrays.asList(currentPosition, nextPosition));
-            Feature currentFeature = new Feature(currentLine);
+        Pair<LatLon, LatLon> currentPair = CalculationUtil.calculateCircleLatLonPair(new LatLon(inputData.getLat(),
+                inputData.getLng()), firstWind.getWindDirection(), inputData.getRadius());
 
-            double distance = GeoUtil.distance(currentPosition, nextPosition);
-            timeInMins += (distance / inputData.getCoefficientF()) / 60;
+        for (int i = 0; i < hourly3Requests.size() - 1; i++) {
+            Wind currentWind = hourly3Requests.get(i).getWind();
+            Wind nextWind = hourly3Requests.get(i + 1).getWind();
+            double currentSpeed = currentWind.getWindSpeed();
+            double currentDeg = currentWind.getWindDirection();
 
-            if (currentConcentration < CONCENTRATION_MIN) {
-                LOGGER.warn("Concentration {} is less than 0.", currentConcentration);
-                addFeatureProperties(CONCENTRATION_MIN, currentFeature, simulationResult);
-                continue;
+            double degreesDifference = CalculationUtil.calculateShortestDegreePath(currentDeg, nextWind.getWindDirection());
+            double degreesStep = degreesDifference / ITERATIONS_NUMBER;
+            double speedStep = (nextWind.getWindSpeed() - currentWind.getWindSpeed()) / ITERATIONS_NUMBER;
 
-            } else if (currentConcentration > CONCENTRATION_MAX) {
-                LOGGER.warn("Concentration {} is greater than 1.", currentConcentration);
-                addFeatureProperties(CONCENTRATION_MAX, currentFeature, simulationResult);
-                continue;
+            for (int j = 0; j < ITERATIONS_NUMBER; j++) {
+                double distance = currentSpeed * ITERATION_TIME_SEC;
+
+                Pair<LatLon, LatLon> nextPair = CalculationUtil.calculateNextLatLonPair(currentPair, currentDeg, distance);
+
+                List<Position> positionList = Stream.of(currentPair.getFirst(), nextPair.getFirst(),
+                        nextPair.getSecond(), currentPair.getSecond())
+                        .map(latLon -> new Position(latLon.getLon(), latLon.getLat()))
+                        .collect(Collectors.toList());
+                List<List<Position>> polygonPositionList = new ArrayList<>();
+                polygonPositionList.add(positionList);
+                Polygon currentPolygon = new Polygon(polygonPositionList);
+                Feature currentPolygonFeature = new Feature(currentPolygon);
+
+                double currentConcentration = CalculationUtil.calculateConcentration(distance,
+                        inputData.getCoefficientF(), inputData.getConcentration());
+                addFeatureProperties(currentConcentration, currentPolygonFeature, simulationResult);
+
+                currentDeg = CalculationUtil.calculateNextDegreesDirection(currentDeg, degreesStep);
+                currentSpeed += speedStep;
+                currentPair = nextPair;
             }
-
-            addFeatureProperties(currentConcentration, currentFeature, simulationResult);
-            i++;
         }
 
         return FeatureConverter.toStringValue(simulationResult);
@@ -76,24 +94,5 @@ public class MapService {
         feature.setProperties(ImmutableMap.of(CONCENTRATION_PARAMETER, concentration,
                 COLOR_PARAMETER, currentColor));
         featureCollection.addFeature(feature);
-    }
-
-    private List<Position> extractPositionList(Resource geoJsonResource) throws IOException {
-        String geoJson = new String(Files.readAllBytes(geoJsonResource.getFile().toPath()));
-
-        FeatureCollection featureCollection = FeatureConverter.toFeatureCollection(geoJson);
-        Feature feature = featureCollection.getFeatures().get(0);
-        Geometry geometry = feature.getGeometry();
-        LineString lineString = (LineString) geometry;
-
-        return lineString.getCoordinates();
-    }
-
-    private int getIndexByLonLat(double lon, double lat, ArrayList<Position> positions) {
-        for (Position position : positions) {
-            if (position.getX().equals(lon) && position.getY().equals(lat))
-                return positions.indexOf(position);
-        }
-        return -1;
     }
 }

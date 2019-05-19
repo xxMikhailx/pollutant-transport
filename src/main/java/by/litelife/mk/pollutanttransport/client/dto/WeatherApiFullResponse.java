@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WeatherApiFullRequest {
+public class WeatherApiFullResponse {
     @JsonProperty("list")
-    private List<WeatherApiDailyRequest> dailyRequests;
+    private List<WeatherApi3HourlyResponse> hourly3Requests;
 }
