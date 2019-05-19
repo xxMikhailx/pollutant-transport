@@ -12,9 +12,10 @@ import com.google.common.collect.ImmutableMap;
 import mil.nga.sf.geojson.Feature;
 import mil.nga.sf.geojson.FeatureCollection;
 import mil.nga.sf.geojson.FeatureConverter;
-import mil.nga.sf.geojson.Point;
 import mil.nga.sf.geojson.Polygon;
 import mil.nga.sf.geojson.Position;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,12 @@ import java.util.stream.Stream;
 
 @Service
 public class MapService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MapService.class);
     private static final String CONCENTRATION_PARAMETER = "concentration";
     private static final String COLOR_PARAMETER = "color";
     private static final int ITERATIONS_NUMBER = 36;
     private static final double ITERATION_TIME_SEC = (180 / ITERATIONS_NUMBER) * 60;
+    private static final double MIN_CONCENTRATION = 0.00004;
 
     @Autowired
     private OpenWeatherMapClient openWeatherMapClient;
@@ -41,15 +44,11 @@ public class MapService {
                 inputData.getLng()));
         List<WeatherApi3HourlyResponse> hourly3Requests = weatherApiFullResponse.getHourly3Requests();
 
-        //Draw a circle
         Wind firstWind = hourly3Requests.get(0).getWind();
-        Position circleCenterPosition = new Position(inputData.getLng(), inputData.getLat());
-        Point circleCenter = new Point(circleCenterPosition);
-        Feature circleFeature = new Feature(circleCenter);
-        addFeatureProperties(inputData.getConcentration(), circleFeature, simulationResult);
-
         Pair<LatLon, LatLon> currentPair = CalculationUtil.calculateCircleLatLonPair(new LatLon(inputData.getLat(),
                 inputData.getLng()), firstWind.getWindDirection(), inputData.getRadius());
+
+        double distanceSummary = firstWind.getWindSpeed() * ITERATION_TIME_SEC;
 
         for (int i = 0; i < hourly3Requests.size() - 1; i++) {
             Wind currentWind = hourly3Requests.get(i).getWind();
@@ -62,9 +61,12 @@ public class MapService {
             double speedStep = (nextWind.getWindSpeed() - currentWind.getWindSpeed()) / ITERATIONS_NUMBER;
 
             for (int j = 0; j < ITERATIONS_NUMBER; j++) {
-                double distance = currentSpeed * ITERATION_TIME_SEC;
+                distanceSummary = distanceSummary + (currentSpeed * ITERATION_TIME_SEC);
+                double currentPointsDistance = currentSpeed * ITERATION_TIME_SEC;
+                LOGGER.debug("Distance: {}", distanceSummary);
+                LOGGER.debug("Distance between current points: {}", currentPointsDistance);
 
-                Pair<LatLon, LatLon> nextPair = CalculationUtil.calculateNextLatLonPair(currentPair, currentDeg, distance);
+                Pair<LatLon, LatLon> nextPair = CalculationUtil.calculateNextLatLonPair(currentPair, currentDeg, currentPointsDistance);
 
                 List<Position> positionList = Stream.of(currentPair.getFirst(), nextPair.getFirst(),
                         nextPair.getSecond(), currentPair.getSecond())
@@ -75,8 +77,12 @@ public class MapService {
                 Polygon currentPolygon = new Polygon(polygonPositionList);
                 Feature currentPolygonFeature = new Feature(currentPolygon);
 
-                double currentConcentration = CalculationUtil.calculateConcentration(distance,
+                double currentConcentration = CalculationUtil.calculateConcentration(distanceSummary,
                         inputData.getCoefficientF(), inputData.getConcentration());
+                LOGGER.debug("Concentration: {}", currentConcentration);
+                if (currentConcentration < MIN_CONCENTRATION) {
+                    return FeatureConverter.toStringValue(simulationResult);
+                }
                 addFeatureProperties(currentConcentration, currentPolygonFeature, simulationResult);
 
                 currentDeg = CalculationUtil.calculateNextDegreesDirection(currentDeg, degreesStep);
