@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class WeatherApiDailyRequest {
+public class WeatherApi3HourlyResponse {
     @JsonProperty("dt_txt")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;

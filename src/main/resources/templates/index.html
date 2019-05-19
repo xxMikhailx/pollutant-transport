@@ -62,11 +62,32 @@
 <script th:src="@{/js/map.js}"></script>
 <script th:src="@{/js/map.utils.js}"></script>
 <script th:src="@{/js/validation.js}"></script>
+<script th:src="@{/js/lodash.core.min.js}"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
-
     var geoJson = JSON.parse(/*[[${simulatedGeojson}]]*/ 'default');
     var isPickedMapPoint = geoJson !== null;
+
+    createLayersFromJson(data) {
+        const layers = [];
+
+        forEach(data, (geo, id) => {
+            L.geoJSON(geo, {
+                pointToLayer: (feature, latlng) => {
+                    if (feature.properties.radius) {
+                        return new L.Circle(latlng, feature.properties.radius);
+                    } else {
+                        return new L.Marker(latlng);
+                    }
+                },
+                onEachFeature: (feature, layer) => {
+                    layer.push(layer);
+                },
+            });
+        });
+
+        return layers;
+    };
 
     L.geoJson(geoJson, {
         style: function (feature) {
