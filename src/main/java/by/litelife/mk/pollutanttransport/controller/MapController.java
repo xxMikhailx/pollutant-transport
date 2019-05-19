@@ -35,7 +35,9 @@ public class MapController {
     public ModelAndView main(Model model) {
         if (!model.containsAttribute("data")) {
             InputData inputData = new InputData();
-            inputData.setRiverSpeed(0.1);
+            inputData.setCoefficientF(1);
+            inputData.setConcentration(1);
+            inputData.setRadius(1);
             model.addAttribute("data", inputData);
         }
 

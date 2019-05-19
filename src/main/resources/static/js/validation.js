@@ -8,13 +8,25 @@ function validateDataEvent() {
 
 function validateData() {
     isCorrect = true;
-    validateRiverSpeedData($(".river-speed"));
+    validateCoefficientFData($(".coefficient-f"));
+    validateConcentrationData($(".concentration"));
+    validateRadiusData($(".radius"));
     showOrHideErrorMessage($(".incorrect-input-values-error-message"), isCorrect);
 }
 
-function validateRiverSpeedData(element) {
-    var isCorrectRiverSpeed = isPositiveDouble(element.val()) && element.val() >= 0.1 && element.val() <= 2;
-    markInputByValidationResult(element, isCorrectRiverSpeed);
+function validateCoefficientFData(element) {
+    var isCorrectCoefficientF = isPositiveDouble(element.val()) && element.val() >= 1 && element.val() <= 3;
+    markInputByValidationResult(element, isCorrectCoefficientF);
+}
+
+function validateConcentrationData(element) {
+    var isCorrectConcentration = isPositiveDouble(element.val()) && element.val() >= 1 && element.val() <= 500;
+    markInputByValidationResult(element, isCorrectConcentration);
+}
+
+function validateRadiusData(element) {
+    var isCorrectRadius = isPositiveDouble(element.val()) && element.val() >= 1 && element.val() <= 500;
+    markInputByValidationResult(element, isCorrectRadius);
 }
 
 function markInputByValidationResult(input, isValid) {

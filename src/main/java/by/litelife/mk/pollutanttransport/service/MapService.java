@@ -50,7 +50,7 @@ public class MapService {
             Feature currentFeature = new Feature(currentLine);
 
             double distance = GeoUtil.distance(currentPosition, nextPosition);
-            timeInMins += (distance / inputData.getRiverSpeed()) / 60;
+            timeInMins += (distance / inputData.getCoefficientF()) / 60;
 
             if (currentConcentration < CONCENTRATION_MIN) {
                 LOGGER.warn("Concentration {} is less than 0.", currentConcentration);
