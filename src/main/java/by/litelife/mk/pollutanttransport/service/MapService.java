@@ -1,7 +1,6 @@
 package by.litelife.mk.pollutanttransport.service;
 
 import by.litelife.mk.pollutanttransport.model.InputData;
-import by.litelife.mk.pollutanttransport.model.TimeConcentrationPair;
 import by.litelife.mk.pollutanttransport.util.ColorGradationsUtil;
 import by.litelife.mk.pollutanttransport.util.GeoUtil;
 import com.google.common.collect.ImmutableMap;
@@ -11,10 +10,8 @@ import mil.nga.sf.geojson.FeatureConverter;
 import mil.nga.sf.geojson.Geometry;
 import mil.nga.sf.geojson.LineString;
 import mil.nga.sf.geojson.Position;
-import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -32,23 +29,13 @@ public class MapService {
     private static final double CONCENTRATION_MIN = 0;
     private static final double CONCENTRATION_MAX = 1;
 
-    @Value("classpath:static/geojson/svisloch-java.geojson")
-    Resource svislochRiver;
-
     public String simulate(InputData inputData) throws IOException {
-        double[] timeValues = inputData.getTimeConcentrationPairs().stream()
-                .mapToDouble(TimeConcentrationPair::getTime)
-                .toArray();
-        double[] concentrationValues = inputData.getTimeConcentrationPairs().stream()
-                .mapToDouble(TimeConcentrationPair::getConcentration)
-                .map(c -> c / 100)
-                .toArray();
+        double[] timeValues = {1, 2, 3};
+        double[] concentrationValues = {1, 2, 3};
 
-        PolynomialFunctionLagrangeForm interpolateFunction = GeoUtil.linearInterpolateFunction(timeValues,
-                concentrationValues);
         FeatureCollection simulationResult = new FeatureCollection();
 
-        ArrayList<Position> positionList = new ArrayList<>(extractPositionList(svislochRiver));
+        ArrayList<Position> positionList = new ArrayList<>();
         int startIndex = getIndexByLonLat(inputData.getLng(), inputData.getLat(), positionList);
         ArrayList<Position> subPositionList = new ArrayList<>(positionList.subList(startIndex, positionList.size() - 1));
 
@@ -64,7 +51,6 @@ public class MapService {
 
             double distance = GeoUtil.distance(currentPosition, nextPosition);
             timeInMins += (distance / inputData.getRiverSpeed()) / 60;
-            currentConcentration = interpolateFunction.value(timeInMins);
 
             if (currentConcentration < CONCENTRATION_MIN) {
                 LOGGER.warn("Concentration {} is less than 0.", currentConcentration);

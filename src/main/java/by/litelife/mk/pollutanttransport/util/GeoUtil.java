@@ -9,11 +9,6 @@ public final class GeoUtil {
 
     }
 
-    public static PolynomialFunctionLagrangeForm linearInterpolateFunction(double[] time, double[] concentration) {
-        NevilleInterpolator linearInterpolator = new NevilleInterpolator();
-        return linearInterpolator.interpolate(time, concentration);
-    }
-
     /**
      * Calculate distance between two points in latitude and longitude.
      * If you are not interested in height difference pass 0.0.

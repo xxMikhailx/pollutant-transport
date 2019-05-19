@@ -3,33 +3,11 @@ package by.litelife.mk.pollutanttransport.model;
 import java.util.List;
 
 public class InputData {
-    private List<TimeConcentrationPair> timeConcentrationPairs;
-    private String timeConcentrationPairsJson;
     private double riverSpeed;
     private double lat;
     private double lng;
 
     public InputData() {
-    }
-
-    public InputData(List<TimeConcentrationPair> timeConcentrationPairs) {
-        this.timeConcentrationPairs = timeConcentrationPairs;
-    }
-
-    public List<TimeConcentrationPair> getTimeConcentrationPairs() {
-        return timeConcentrationPairs;
-    }
-
-    public void setTimeConcentrationPairs(List<TimeConcentrationPair> timeConcentrationPairs) {
-        this.timeConcentrationPairs = timeConcentrationPairs;
-    }
-
-    public String getTimeConcentrationPairsJson() {
-        return timeConcentrationPairsJson;
-    }
-
-    public void setTimeConcentrationPairsJson(String timeConcentrationPairsJson) {
-        this.timeConcentrationPairsJson = timeConcentrationPairsJson;
     }
 
     public double getRiverSpeed() {

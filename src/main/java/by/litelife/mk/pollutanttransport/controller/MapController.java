@@ -4,9 +4,7 @@ import by.litelife.mk.pollutanttransport.client.OpenWeatherMapClient;
 import by.litelife.mk.pollutanttransport.client.dto.LatLon;
 import by.litelife.mk.pollutanttransport.client.dto.WeatherApiFullRequest;
 import by.litelife.mk.pollutanttransport.model.InputData;
-import by.litelife.mk.pollutanttransport.model.TimeConcentrationPair;
 import by.litelife.mk.pollutanttransport.service.MapService;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class MapController {
@@ -38,7 +34,7 @@ public class MapController {
     @GetMapping(value = "/")
     public ModelAndView main(Model model) {
         if (!model.containsAttribute("data")) {
-            InputData inputData = new InputData(generateTimeConcentrationPairList());
+            InputData inputData = new InputData();
             inputData.setRiverSpeed(0.1);
             model.addAttribute("data", inputData);
         }
@@ -49,10 +45,6 @@ public class MapController {
     @PostMapping(value = "/simulate")
     public String simulate(RedirectAttributes redirectAttributes, @ModelAttribute("data") InputData inputData)
             throws IOException {
-        List<TimeConcentrationPair> pairList = objectMapper.readValue(inputData.getTimeConcentrationPairsJson(),
-                new TypeReference<List<TimeConcentrationPair>>(){});
-        inputData.setTimeConcentrationPairs(pairList);
-
         String simulatedGeoJson = mapService.simulate(inputData);
 
         redirectAttributes.addFlashAttribute("simulatedGeojson", simulatedGeoJson);
@@ -64,15 +56,5 @@ public class MapController {
     @ResponseBody
     public ResponseEntity<WeatherApiFullRequest> main() {
         return new ResponseEntity<>(openWeatherMapClient.getWinds(new LatLon(53.895261, 27.554336)), HttpStatus.OK);
-    }
-
-    private List<TimeConcentrationPair> generateTimeConcentrationPairList() {
-        List<TimeConcentrationPair> timeConcentrationPairs = new ArrayList<>();
-
-        for (int i = 0; i < 2; i++) {
-            timeConcentrationPairs.add(new TimeConcentrationPair());
-        }
-
-        return timeConcentrationPairs;
     }
 }
