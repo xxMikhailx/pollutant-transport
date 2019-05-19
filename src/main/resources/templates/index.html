@@ -68,32 +68,10 @@
     var geoJson = JSON.parse(/*[[${simulatedGeojson}]]*/ 'default');
     var isPickedMapPoint = geoJson !== null;
 
-    createLayersFromJson(data) {
-        const layers = [];
-
-        forEach(data, (geo, id) => {
-            L.geoJSON(geo, {
-                pointToLayer: (feature, latlng) => {
-                    if (feature.properties.radius) {
-                        return new L.Circle(latlng, feature.properties.radius);
-                    } else {
-                        return new L.Marker(latlng);
-                    }
-                },
-                onEachFeature: (feature, layer) => {
-                    layer.push(layer);
-                },
-            });
-        });
-
-        return layers;
-    };
-
     L.geoJson(geoJson, {
         style: function (feature) {
             return {
                 color: feature.properties.color,
-                weight: 8
             }
         }
     }).addTo(mymap);
