@@ -14,6 +14,7 @@ main {
 }
 
 .map-container {
+    min-width: 100%;
     height: 70vh;
 }
 
