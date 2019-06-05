@@ -7,9 +7,7 @@
 <footer class="page-footer" th:fragment="footer">
     <div class="footer-copyright">
         <div class="container">
-            <th:block th:text="#{footer.copyright}"/>
-            &copy;
-            <a th:href="@{/}" th:text="#{footer.copyright.name}"></a>
+            <th:block th:text="#{footer.copyright} + ' - v1.0 - 2019'"/>
         </div>
     </div>
 </footer>
