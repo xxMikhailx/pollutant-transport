@@ -30,7 +30,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <label for="concentration" th:text="#{attribute.concentration}"></label>
+                        <label for="concentration" th:text="#{attribute.concentration}"></label><sup>3</sup>
                         <input type="text" class="form-control concentration" id="concentration"
                                th:value="${inputData == null} ? 1 : ${inputData.concentration}"
                                th:field="*{concentration}">
