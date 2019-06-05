@@ -7,7 +7,7 @@
 
 <main class="container">
     <div class="row">
-        <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3 formula-container mb-3">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 formula-container mb-3">
             <form action="#" th:action="@{/simulate}" th:object="${data}" method="POST" class="simulator-form"
                   novalidate>
                 <div class="row text-danger d-none incorrect-input-values-error-message">
@@ -21,15 +21,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <label for="coefficientF" th:text="#{attribute.coefficient.f}"></label>
                         <input type="text" class="form-control coefficient-f" id="coefficientF"
                                th:value="${inputData == null} ? 1 : ${inputData.coefficientF}"
                                th:field="*{coefficientF}">
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <label for="concentration" th:text="#{attribute.concentration}"></label><sup>3</sup>
                         <input type="text" class="form-control concentration" id="concentration"
                                th:value="${inputData == null} ? 1 : ${inputData.concentration}"
@@ -46,16 +44,20 @@
                 </div>
                 <input type="hidden" th:field="*{lat}" id="lat" th:value="${inputData == null} ? 0 : ${inputData.lat}">
                 <input type="hidden" th:field="*{lng}" id="lng" th:value="${inputData == null} ? 0 : ${inputData.lng}">
-                <div class="form-group">
-                    <button type="button" class="btn btn-danger reset-data w-100"
-                            th:text="#{reset.data.button.text}"></button>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary simulate w-100"
-                            th:text="#{simulation.button.text}"></button>
+                <div class="row">
+                    <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <button type="button" class="btn btn btn-outline-danger reset-data w-100"
+                                th:text="#{reset.data.button.text}"></button>
+                    </div>
+                    <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <button type="submit" class="btn btn-outline-success simulate w-100"
+                                th:text="#{simulation.button.text}"></button>
+                    </div>
                 </div>
             </form>
         </div>
+    </div>
+    <div class="row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9 map-container mb-3" id="mainMap">
         </div>
     </div>
