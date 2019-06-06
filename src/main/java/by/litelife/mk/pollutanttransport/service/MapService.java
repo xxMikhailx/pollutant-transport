@@ -8,6 +8,8 @@ import by.litelife.mk.pollutanttransport.client.dto.Wind;
 import by.litelife.mk.pollutanttransport.model.InputData;
 import by.litelife.mk.pollutanttransport.util.CalculationUtil;
 import by.litelife.mk.pollutanttransport.util.ColorGradationsUtil;
+import by.litelife.mk.pollutanttransport.util.ConversionUtil;
+import by.litelife.mk.pollutanttransport.util.GeoUtil;
 import com.google.common.collect.ImmutableMap;
 import mil.nga.sf.geojson.Feature;
 import mil.nga.sf.geojson.FeatureCollection;
@@ -24,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static by.litelife.mk.pollutanttransport.util.CalculationUtil.calculateSemicircleLatLonList;
+import static by.litelife.mk.pollutanttransport.util.ConversionUtil.convertLatLonToPosition;
 
 @Service
 public class MapService {
@@ -70,7 +75,7 @@ public class MapService {
 
                 List<Position> positionList = Stream.of(currentPair.getFirst(), nextPair.getFirst(),
                         nextPair.getSecond(), currentPair.getSecond())
-                        .map(latLon -> new Position(latLon.getLon(), latLon.getLat()))
+                        .map(ConversionUtil::convertLatLonToPosition)
                         .collect(Collectors.toList());
                 List<List<Position>> polygonPositionList = new ArrayList<>();
                 polygonPositionList.add(positionList);
@@ -81,9 +86,16 @@ public class MapService {
                         inputData.getCoefficientF(), inputData.getConcentration());
                 LOGGER.debug("Concentration: {}", currentConcentration);
                 if (currentConcentration < MIN_CONCENTRATION) {
+                    Feature semicircleFeature = generateSemicircleFeature(currentPair.getFirst(), currentPair.getSecond(), currentDeg);
+                    addFeatureProperties(currentConcentration, semicircleFeature, simulationResult);
                     return FeatureConverter.toStringValue(simulationResult);
                 }
                 addFeatureProperties(currentConcentration, currentPolygonFeature, simulationResult);
+
+                if (i == hourly3Requests.size() - 1) {
+                    Feature semicircleFeature = generateSemicircleFeature(currentPair.getFirst(), currentPair.getSecond(), currentDeg);
+                    addFeatureProperties(currentConcentration, semicircleFeature, simulationResult);
+                }
 
                 currentDeg = CalculationUtil.calculateNextDegreesDirection(currentDeg, degreesStep);
                 currentSpeed += speedStep;
@@ -92,6 +104,17 @@ public class MapService {
         }
 
         return FeatureConverter.toStringValue(simulationResult);
+    }
+
+    private Feature generateSemicircleFeature(LatLon first, LatLon second, double degrees) {
+        double radius = GeoUtil.distance(convertLatLonToPosition(first), convertLatLonToPosition(second)) / 2;
+        List<Position> positionList = calculateSemicircleLatLonList(first, second, degrees, radius).stream()
+                .map(ConversionUtil::convertLatLonToPosition)
+                .collect(Collectors.toList());
+
+        List<List<Position>> polygonPositionList = new ArrayList<>();
+        polygonPositionList.add(positionList);
+        return new Feature(new Polygon(polygonPositionList));
     }
 
     private void addFeatureProperties(double concentration, Feature feature, FeatureCollection featureCollection) {
