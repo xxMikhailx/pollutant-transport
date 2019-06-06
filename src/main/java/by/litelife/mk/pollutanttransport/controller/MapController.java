@@ -53,7 +53,7 @@ public class MapController {
     private List<TimeConcentrationPair> generateTimeConcentrationPairList() {
         List<TimeConcentrationPair> timeConcentrationPairs = new ArrayList<>();
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             timeConcentrationPairs.add(new TimeConcentrationPair());
         }
 
