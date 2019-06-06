@@ -44,9 +44,8 @@ public class MapController {
                 new TypeReference<List<TimeConcentrationPair>>(){});
         inputData.setTimeConcentrationPairs(pairList);
 
-        String simulatedGeoJson = mapService.simulate(inputData);
+        redirectAttributes = mapService.simulate(inputData, redirectAttributes);
 
-        redirectAttributes.addFlashAttribute("simulatedGeojson", simulatedGeoJson);
         redirectAttributes.addFlashAttribute("data", inputData);
         return "redirect:/";
     }
