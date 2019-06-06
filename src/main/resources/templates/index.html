@@ -92,6 +92,7 @@
         <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9 map-container mb-3" id="mainMap">
         </div>
     </div>
+    <div id="chartDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
 </main>
 
 <div th:replace="~{fragment/footer :: footer}"></div>
@@ -102,10 +103,13 @@
 <script th:src="@{/js/validation.js}"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
+    var concentrationUnit = /*[[#{attribute.concentration.unit}]]*/ 'mg/l';
+    var chartXValues = /*[[${chartXValues}]]*/ 'none';
+    var chartYValues = /*[[${chartYValues}]]*/ 'none';
 
     var geoJson = JSON.parse(/*[[${simulatedGeojson}]]*/ 'default');
-    var timeTitle = /*[[#{attribute.time}]]*/ 'time';
-    var concentrationTitle = /*[[#{attribute.concentration}]]*/ 'concentration';
+    var timeTitle = /*[[#{attribute.time}]]*/ 'time, min';
+    var concentrationTitle = /*[[#{attribute.concentration}]]*/ 'concentration, mg/l';
     var isPickedRiverPoint = geoJson !== null;
     $(".time-label").text(timeTitle);
     $(".concentration-label").text(concentrationTitle);
@@ -141,8 +145,8 @@
         for (var i = 0; i < grades.length - 1; i++) {
             div.innerHTML +=
                 '<i style="background:' + getColor(grades[i] + 0.01) + '"></i> ' +
-                (grades[i + 2] ? grades[i] + '&percnt;' + '&ndash;' + grades[i + 1] + '&percnt;' + '<br>'
-                    : grades[i] + '&percnt;' + '&ndash;' + grades[i + 1] + '&percnt;');
+                (grades[i + 2] ? grades[i] + ' ' + concentrationUnit + ' &ndash; ' + grades[i + 1] + ' ' + concentrationUnit + '<br>'
+                    : grades[i] + ' ' + concentrationUnit + ' &ndash; ' + grades[i + 1] + ' ' + concentrationUnit);
         }
 
         return div;
@@ -171,6 +175,34 @@
     $(".reset-points").on('click', validateData);
     $(".add-point").on('click', validateData);
     $(".simulator-form").on('click', ".remove-point", validateData);
+
+    var trace = {
+        x: chartXValues,
+        y: chartYValues,
+        mode: 'lines',
+        name: 'spline',
+        line: {shape: 'spline'},
+        type: 'scatter'
+    };
+
+    var data = [trace];
+
+    var layout = {
+        legend: {
+            y: 0.5,
+            traceorder: 'reversed',
+            font: {size: 16},
+            yref: 'paper'
+        },
+        xaxis: {
+            title: timeTitle
+        },
+        yaxis: {
+            title: concentrationTitle
+        }
+    };
+
+    Plotly.newPlot('chartDiv', data, layout, {displayModeBar: false});
     /*]]>*/
 </script>
 </body>
