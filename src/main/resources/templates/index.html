@@ -72,6 +72,8 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var geoJson = JSON.parse(/*[[${simulatedGeojson}]]*/ 'default');
+    var concentrationUnit = /*[[#{attribute.concentration.unit}]]*/ 'mg/l';
+    concentrationUnit = concentrationUnit + '<sup>3</sup>'
     var isPickedMapPoint = geoJson !== null;
 
     L.geoJson(geoJson, {
@@ -104,8 +106,8 @@
         for (var i = 0; i < labels.length - 1; i++) {
             div.innerHTML +=
                 '<i style="background:' + getColor(grades[i] + 0.01) + '"></i> ' +
-                (labels[i + 2] ? labels[i] + '&ndash;' + labels[i + 1] + '<br>'
-                    : labels[i] + '&ndash;' + labels[i + 1]);
+                (labels[i + 2] ? labels[i] + ' ' + concentrationUnit + ' &ndash; ' + labels[i + 1] + ' ' + concentrationUnit + '<br>'
+                    : labels[i] + ' ' + concentrationUnit + ' &ndash; ' + labels[i + 1] + ' ' + concentrationUnit);
         }
 
         return div;

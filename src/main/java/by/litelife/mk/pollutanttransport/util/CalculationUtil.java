@@ -9,6 +9,7 @@ import java.util.List;
 public final class CalculationUtil {
     private static final double COEFFICIENT_F_THRESHOLD = 1.5;
     private static final double MAX_CONCENTRATION_DISTANCE = 20;
+    private static final double MAX_CIRCLE_DEGREE = 360;
     private static final double DEVIATION_VALUE = 5;
 
     private CalculationUtil() {
@@ -31,6 +32,19 @@ public final class CalculationUtil {
                     ((0.1 * Math.pow(distanceRelation, 2)) + (2.47 * distanceRelation) - 17.8);
             return mainCoefficient * maxConcentration;
         }
+    }
+
+    public static double calculateNextDegreesDirection(double currentDegrees, double degreesStep) {
+        currentDegrees += degreesStep;
+
+        if (currentDegrees < 0) {
+            currentDegrees += MAX_CIRCLE_DEGREE;
+        }
+        if (currentDegrees >= MAX_CIRCLE_DEGREE) {
+            currentDegrees -= MAX_CIRCLE_DEGREE;
+        }
+
+        return currentDegrees;
     }
 
     public static Pair<LatLon, LatLon> calculateNextLatLonPair(Pair<LatLon, LatLon> currentLatLonPair, double degrees, double distance) {
