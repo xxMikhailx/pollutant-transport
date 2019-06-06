@@ -1,7 +1,7 @@
 package by.litelife.mk.pollutanttransport.util;
 
 import by.litelife.mk.pollutanttransport.client.dto.LatLon;
-import org.springframework.data.util.Pair;
+import org.apache.commons.math3.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +36,13 @@ public final class CalculationUtil {
     public static Pair<LatLon, LatLon> calculateNextLatLonPair(Pair<LatLon, LatLon> currentLatLonPair, double degrees, double distance) {
         LatLon leftLatLon = calculateLatLonByDegreesAndDistance(currentLatLonPair.getFirst(), degrees + DEVIATION_VALUE, distance);
         LatLon rightLatLon = calculateLatLonByDegreesAndDistance(currentLatLonPair.getSecond(), degrees - DEVIATION_VALUE, distance);
-        return Pair.of(leftLatLon, rightLatLon);
+        return Pair.create(leftLatLon, rightLatLon);
     }
 
     public static Pair<LatLon, LatLon> calculateCircleLatLonPair(LatLon centralLatLon, double degrees, double radius) {
         LatLon leftLatLon = calculateLatLonByDegreesAndDistance(centralLatLon, degrees + 90, radius);
         LatLon rightLatLon = calculateLatLonByDegreesAndDistance(centralLatLon, degrees - 90, radius);
-        return Pair.of(leftLatLon, rightLatLon);
+        return Pair.create(leftLatLon, rightLatLon);
     }
 
     public static List<LatLon> calculateSemicircleLatLonList(LatLon first, LatLon second, double degrees, double radius) {
