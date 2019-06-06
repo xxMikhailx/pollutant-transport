@@ -84,6 +84,25 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <button type="button" class="btn btn-info show-graph w-100"
+                            th:classappend="${chartXValues == null || chartYValues == null} ? 'd-none'"
+                            data-toggle="modal" data-target="#graphModal" th:text="#{graph.button.text}"></button>
+                    <div class="modal fade" id="graphModal" tabindex="-1" role="dialog"
+                         aria-labelledby="pointsModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div id="chartDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                            th:text="#{modal.close.button.text}"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <button type="submit" class="btn btn-primary simulate w-100"
                             th:text="#{simulation.button.text}"></button>
                 </div>
@@ -92,7 +111,6 @@
         <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9 map-container mb-3" id="mainMap">
         </div>
     </div>
-    <div id="chartDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
 </main>
 
 <div th:replace="~{fragment/footer :: footer}"></div>
