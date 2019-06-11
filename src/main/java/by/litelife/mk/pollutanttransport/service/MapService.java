@@ -55,11 +55,18 @@ public class MapService {
 
         double distanceSummary = firstWind.getWindSpeed() * ITERATION_TIME_SEC;
         double currentDeg = firstWind.getWindDirection();
+        double degreesStep = 0;
 
         for (int i = 0; i < hourly3Requests.size() - 1; i++) {
             Wind currentWind = hourly3Requests.get(i).getWind();
             Wind nextWind = hourly3Requests.get(i + 1).getWind();
             double currentSpeed = currentWind.getWindSpeed();
+            if (inputData.isUseForecast()) {
+                currentDeg = currentWind.getWindDirection();
+
+                double degreesDifference = CalculationUtil.calculateShortestDegreePath(currentDeg, nextWind.getWindDirection());
+                degreesStep = degreesDifference / ITERATIONS_NUMBER;
+            }
             double speedStep = (nextWind.getWindSpeed() - currentWind.getWindSpeed()) / ITERATIONS_NUMBER;
 
             for (int j = 0; j < ITERATIONS_NUMBER; j++) {
@@ -94,6 +101,9 @@ public class MapService {
                     addFeatureProperties(currentConcentration, semicircleFeature, simulationResult);
                 }
 
+                if (inputData.isUseForecast()) {
+                    currentDeg = CalculationUtil.calculateNextDegreesDirection(currentDeg, degreesStep);
+                }
                 currentSpeed += speedStep;
                 currentPair = nextPair;
             }
