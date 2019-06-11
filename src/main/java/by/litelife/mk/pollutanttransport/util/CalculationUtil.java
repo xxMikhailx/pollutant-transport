@@ -34,6 +34,23 @@ public final class CalculationUtil {
         }
     }
 
+    public static double calculateShortestDegreePath(double currentWindDegree, double nextWindDegree) {
+        double firstDifference = nextWindDegree - currentWindDegree;
+        if (firstDifference == 0) {
+            return 0;
+        }
+
+        double secondDifference = MAX_CIRCLE_DEGREE - Math.abs(firstDifference);
+
+        if (Math.abs(firstDifference) <= Math.abs(secondDifference)) {
+            return firstDifference;
+        } else if (firstDifference < 0) {
+            return Math.abs(secondDifference);
+        } else {
+            return -secondDifference;
+        }
+    }
+
     public static double calculateNextDegreesDirection(double currentDegrees, double degreesStep) {
         currentDegrees += degreesStep;
 

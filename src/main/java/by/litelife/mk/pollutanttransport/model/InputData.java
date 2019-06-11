@@ -9,4 +9,5 @@ public class InputData {
     private double radius;
     private double lat;
     private double lng;
+    private boolean useForecast;
 }
